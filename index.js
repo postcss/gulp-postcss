@@ -1,7 +1,6 @@
 var through = require('through2')
 var postcss = require('postcss')
 var applySourceMap = require('vinyl-sourcemaps-apply')
-var _ = require('lodash')
 
 
 module.exports = function (processors, options) {
@@ -11,9 +10,19 @@ module.exports = function (processors, options) {
   function transform (file, encoding, cb) {
 
     // Source map is inline by default
-    var opts = _.extend({ map: 'inline' }, options)
+    var opts = { map: 'inline' }
     var processor = postcss()
     var result
+    var attr
+
+    // Extend default options
+    if (options) {
+      for (attr in options) {
+        if (options.hasOwnProperty(attr)) {
+          opts[attr] = options[attr]
+        }
+      }
+    }
 
     if (file.base && file.path) {
       opts.from = file.relative
