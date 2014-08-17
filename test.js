@@ -27,6 +27,25 @@ it('should transform css with multiple processors', function (cb) {
 })
 
 
+it('should correctly wrap postcss errors', function (cb) {
+
+  var stream = postcss([ doubler ])
+
+  stream.on('error', function (err) {
+    assert.ok(err instanceof gutil.PluginError)
+    assert.equal(err.plugin, 'gulp-postcss')
+    cb()
+  })
+
+  stream.write(new gutil.File({
+    contents: new Buffer('a {\n  a b {}\n}')
+  }))
+
+  stream.end()
+
+})
+
+
 function doubler (css) {
   css.eachDecl(function (decl) {
     decl.parent.prepend(decl.clone())

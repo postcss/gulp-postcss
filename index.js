@@ -1,6 +1,7 @@
 var through = require('through2')
 var postcss = require('postcss')
 var applySourceMap = require('vinyl-sourcemaps-apply')
+var gutil = require('gulp-util')
 
 
 module.exports = function (processors, options) {
@@ -37,7 +38,11 @@ module.exports = function (processors, options) {
       opts.map = true
     }
 
-    result = processor.process(file.contents.toString('utf8'), opts)
+    try {
+      result = processor.process(file.contents.toString('utf8'), opts)
+    } catch (err) {
+      return cb(new gutil.PluginError('gulp-postcss', err))
+    }
 
     file.contents = new Buffer(result.css)
 
