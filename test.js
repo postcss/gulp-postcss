@@ -46,6 +46,14 @@ it('should correctly wrap postcss errors', function (cb) {
 })
 
 
+it ('should throw error if processors are not provided', function (cb) {
+  assert.throws( function () { postcss() }, gutil.PluginError )
+  assert.throws( function () { postcss('') }, gutil.PluginError )
+  assert.throws( function () { postcss({}) }, gutil.PluginError )
+  cb()
+})
+
+
 function doubler (css) {
   css.eachDecl(function (decl) {
     decl.parent.prepend(decl.clone())

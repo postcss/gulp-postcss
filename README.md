@@ -10,11 +10,13 @@ var postcss = require('gulp-postcss')
 var gulp = require('gulp')
 var autoprefixer = require('autoprefixer')
 var mqpacker = require('css-mqpacker')
+var csswring = require('csswring')
 
 gulp.task('css', function () {
   var processors = [
     autoprefixer('last 1 version').postcss
   , mqpacker.processor
+  , csswring.postcss
   ]
   return gulp.src('./src/*.css')
     .pipe(postcss(processors))
