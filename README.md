@@ -1,5 +1,4 @@
-gulp-postcss
-============
+# gulp-postcss [![Build Status](https://api.travis-ci.org/w0rm/gulp-postcss.png)](https://travis-ci.org/w0rm/gulp-postcss)
 
 [PostCSS](https://github.com/postcss/postcss) gulp plugin to pipe CSS through
 several processors, but parse CSS only once.
