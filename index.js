@@ -41,7 +41,7 @@ module.exports = function (processors, options) {
 
     // Generate separate source map for gulp-sourcemap
     if (file.sourceMap) {
-      opts.map = true
+      opts.map = { annotation: false }
     }
 
     try {
