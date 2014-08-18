@@ -1,7 +1,7 @@
 gulp-postcss
 ============
 
-[PostCSS](https://github.com/postcss/postcss) gulp plugin to process CSS throw
+[PostCSS](https://github.com/postcss/postcss) gulp plugin to pipe CSS through
 several processors, but parse CSS only once.
 
 ## Basic usage
