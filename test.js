@@ -2,7 +2,7 @@
 
 var assert = require('assert')
 var gutil = require('gulp-util')
-var postcss = require('.')
+var postcss = require('./index')
 
 it('should transform css with multiple processors', function (cb) {
 
