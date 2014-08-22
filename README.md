@@ -8,7 +8,7 @@ several processors, but parse CSS only once.
 ```js
 var postcss = require('gulp-postcss')
 var gulp = require('gulp')
-var autoprefixer = require('autoprefixer')
+var autoprefixer = require('autoprefixer-core')
 var mqpacker = require('css-mqpacker')
 var csswring = require('csswring')
 
