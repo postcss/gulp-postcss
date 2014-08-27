@@ -14,9 +14,9 @@ var csswring = require('csswring')
 
 gulp.task('css', function () {
     var processors = [
-        autoprefixer('last 1 version').postcss,
-        mqpacker.processor,
-        csswring.postcss
+        autoprefixer('last 1 version'),
+        mqpacker,
+        csswring
     ];
     return gulp.src('./src/*.css')
         .pipe(postcss(processors))
