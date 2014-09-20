@@ -9,7 +9,6 @@ it('should transform css with multiple processors', function (cb) {
 
   var stream = postcss(
     [ doubler, doubler ]
-  , { map: false }  // omit source map for the test
   )
 
   stream.on('data', function (file) {

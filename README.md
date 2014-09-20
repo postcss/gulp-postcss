@@ -26,7 +26,7 @@ gulp.task('css', function () {
 
 ## Source map support
 
-Source map is inlined by default, to extract map use together
+Source map is disabled by default, to extract map use together
 with [gulp-sourcemaps](https://github.com/floridoo/gulp-sourcemaps).
 
 ```js
