@@ -18,8 +18,8 @@ module.exports = function (processors, options) {
       return cb(new gutil.PluginError('gulp-postcss', 'Streams are not supported!'))
     }
 
-    // Source map is inline by default
-    var opts = { map: 'inline' }
+    // Source map is disabled by default
+    var opts = { map: false }
     var processor = postcss()
     var result
     var attr
