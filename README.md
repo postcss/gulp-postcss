@@ -6,17 +6,44 @@ several processors, but parse CSS only once.
 ## Basic usage
 
 ```js
-var postcss = require('gulp-postcss')
-var gulp = require('gulp')
-var autoprefixer = require('autoprefixer-core')
-var mqpacker = require('css-mqpacker')
-var csswring = require('csswring')
+var postcss = require('gulp-postcss');
+var gulp = require('gulp');
+var autoprefixer = require('autoprefixer-core');
+var mqpacker = require('css-mqpacker');
+var csswring = require('csswring');
 
 gulp.task('css', function () {
     var processors = [
-        autoprefixer('last 1 version'),
+        autoprefixer({browsers: ['last 1 version']}),
         mqpacker,
         csswring
+    ];
+    return gulp.src('./src/*.css')
+        .pipe(postcss(processors))
+        .pipe(gulp.dest('./dest'));
+});
+```
+
+## Using a custom processor
+
+```js
+var postcss = require('gulp-postcss');
+var autoprefixer = require('autoprefixer-core');
+var opacity = function (css, opts) {
+    css.eachDecl(function(decl) {
+        if (decl.prop === 'opacity') {
+            decl.parent.insertAfter(decl, {
+                prop: '-ms-filter',
+                value: '"progid:DXImageTransform.Microsoft.Alpha(Opacity=' + (parseFloat(decl.value) * 100) + ')"'
+            });
+        }
+    }
+};
+
+gulp.task('css', function () {
+    var processors = [
+        autoprefixer({browsers: ['last 1 version']}),
+        opacity
     ];
     return gulp.src('./src/*.css')
         .pipe(postcss(processors))
