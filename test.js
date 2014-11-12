@@ -38,7 +38,7 @@ it('should correctly wrap postcss errors', function (cb) {
   })
 
   stream.write(new gutil.File({
-    contents: new Buffer('a; {\n  a b {}\n}')
+    contents: new Buffer('a {')
   }))
 
   stream.end()
