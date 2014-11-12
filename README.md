@@ -66,6 +66,9 @@ return gulp.src('./src/*.css')
 
 ## Changelog
 
+* 3.0.0
+  * Updated PostCSS to 3.0 and fixed tests
+
 * 2.0.1
   * Added Changelog
   * Added example for a custom processor in README

@@ -38,7 +38,7 @@ it('should correctly wrap postcss errors', function (cb) {
   })
 
   stream.write(new gutil.File({
-    contents: new Buffer('a {\n  a b {}\n}')
+    contents: new Buffer('a; {\n  a b {}\n}')
   }))
 
   stream.end()
@@ -67,7 +67,7 @@ it ('should generate source maps', function (cb) {
     .pipe(write)
 
   write.on('data', function (file) {
-    assert.equal(file.sourceMap.mappings, 'AAAA,IAAI,cAAA,AAAa,cAAb,AAAa,cAAb,AAAa,aAAA,EAAC')
+    assert.equal(file.sourceMap.mappings, 'AAAA,IAAI,cAAA,AAAY,cAAZ,AAAY,cAAZ,AAAY,aAAA,EAAE')
     assert(/sourceMappingURL=data:application\/json;base64/.test(file.contents.toString()))
     cb()
   })
