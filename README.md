@@ -63,3 +63,24 @@ return gulp.src('./src/*.css')
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('./dest'));
 ```
+
+## Changelog
+
+* 2.0.1
+  * Added Changelog
+  * Added example for a custom processor in README
+
+* 2.0.0
+  * Disable source map by default
+  * Test source map
+  * Added Travis support
+  * Use autoprefixer-core in README
+
+* 1.0.2
+  * Improved README
+
+* 1.0.1
+  * Don't add source map comment if used with gulp-sourcemap
+
+* 1.0.0
+  * Initial release
