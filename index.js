@@ -1,3 +1,5 @@
+var path = require('path')
+
 var through = require('through2')
 var postcss = require('postcss')
 var applySourceMap = require('vinyl-sourcemaps-apply')
@@ -34,7 +36,7 @@ module.exports = function (processors, options) {
     }
 
     if (file.base && file.path) {
-      opts.from = file.relative
+      opts.from = path.join(file.base, file.relative)
     } else {
       opts.from = file.path
     }
