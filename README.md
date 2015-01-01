@@ -66,6 +66,9 @@ return gulp.src('./src/*.css')
 
 ## Changelog
 
+* 4.0.0
+  * Updated PostCSS to 4.0
+
 * 3.0.0
   * Updated PostCSS to 3.0 and fixed tests
 
