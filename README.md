@@ -66,6 +66,9 @@ return gulp.src('./src/*.css')
 
 ## Changelog
 
+* 4.0.1
+  * Made PostCSS 4.x a peer dependency
+
 * 4.0.0
   * Updated PostCSS to 4.0
 
