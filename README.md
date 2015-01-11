@@ -5,7 +5,7 @@ several processors, but parse CSS only once.
 
 ## Install
 
-    $ npm install --save-dev gulp-traceur
+    $ npm install --save-dev gulp-postcss
 
 ## Basic usage
 
