@@ -3,6 +3,10 @@
 [PostCSS](https://github.com/postcss/postcss) gulp plugin to pipe CSS through
 several processors, but parse CSS only once.
 
+## Install
+
+    $ npm install --save-dev gulp-traceur
+
 ## Basic usage
 
 ```js
