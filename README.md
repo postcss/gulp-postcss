@@ -70,6 +70,9 @@ return gulp.src('./src/*.css')
 
 ## Changelog
 
+* 4.0.2
+  * Made PostCSS a simple dependency, because peer dependency is deprecated
+
 * 4.0.1
   * Made PostCSS 4.x a peer dependency
 
