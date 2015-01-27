@@ -2,7 +2,7 @@ var through = require('through2')
 var postcss = require('postcss')
 var applySourceMap = require('vinyl-sourcemaps-apply')
 var gutil = require('gulp-util')
-
+var path = require('path')
 
 module.exports = function (processors, options) {
 
@@ -23,6 +23,7 @@ module.exports = function (processors, options) {
     var processor = postcss()
     var result
     var attr
+    var map
 
     // Extend default options
     if (options) {
@@ -51,7 +52,12 @@ module.exports = function (processors, options) {
 
     // Apply source map to the chain
     if (file.sourceMap) {
-      applySourceMap(file, result.map.toString())
+      map = result.map.toJSON()
+      map.file = file.relative
+      map.sources = [].map.call(map.sources, function (source) {
+        return path.relative(file.base, source)
+      })
+      applySourceMap(file, map)
     }
 
     cb(null, file)
