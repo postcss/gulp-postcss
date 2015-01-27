@@ -83,6 +83,32 @@ it ('should generate source maps', function (cb) {
 })
 
 
+it ('should correctly generate relative source map', function (cb) {
+
+  var init = sourceMaps.init()
+  var css = postcss(
+    [ doubler, doubler ]
+  )
+
+  init.pipe(css)
+
+  css.on('data', function (file) {
+    assert.equal(file.sourceMap.file, 'fixture.css')
+    assert.deepEqual(file.sourceMap.sources, ['fixture.css'])
+    cb()
+  })
+
+  init.write(new gutil.File({
+    base: __dirname + '/src',
+    path: __dirname + '/src/fixture.css',
+    contents: new Buffer('a { color: black }')
+  }))
+
+  init.end()
+
+})
+
+
 function doubler (css) {
   css.eachDecl(function (decl) {
     decl.parent.prepend(decl.clone())

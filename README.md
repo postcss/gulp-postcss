@@ -70,6 +70,9 @@ return gulp.src('./src/*.css')
 
 ## Changelog
 
+* 4.0.3
+  * Fixed bug with relative source map
+
 * 4.0.2
   * Made PostCSS a simple dependency, because peer dependency is deprecated
 
