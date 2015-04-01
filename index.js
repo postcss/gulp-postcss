@@ -1,4 +1,4 @@
-var through = require('through2')
+var Stream = require('stream')
 var postcss = require('postcss')
 var applySourceMap = require('vinyl-sourcemaps-apply')
 var gutil = require('gulp-util')
@@ -10,20 +10,17 @@ module.exports = function (processors, options) {
     throw new gutil.PluginError('gulp-postcss', 'Please provide array of postcss processors!')
   }
 
-  return through.obj(transform)
+  var stream = new Stream.Transform({ objectMode: true })
 
-  function transform (file, encoding, cb) {
+  stream._transform = function (file, encoding, cb) {
 
     if (file.isStream()) {
-      return cb(new gutil.PluginError('gulp-postcss', 'Streams are not supported!'))
+      return handleError('Streams are not supported!')
     }
 
     // Source map is disabled by default
     var opts = { map: false }
-    var processor = postcss()
-    var result
     var attr
-    var map
 
     // Extend default options
     if (options) {
@@ -42,25 +39,36 @@ module.exports = function (processors, options) {
     }
 
     try {
-      processors.forEach(processor.use.bind(processor))
-      result = processor.process(file.contents.toString('utf8'), opts)
-    } catch (err) {
-      return cb(new gutil.PluginError('gulp-postcss', err))
+      postcss(processors)
+        .process(file.contents, opts)
+        .then(handleResult, handleError)
+    } catch (error) {
+      handleError(error)
     }
 
-    file.contents = new Buffer(result.css)
+    function handleResult (result) {
+      var map
 
-    // Apply source map to the chain
-    if (file.sourceMap) {
-      map = result.map.toJSON()
-      map.file = file.relative
-      map.sources = [].map.call(map.sources, function (source) {
-        return path.relative(file.base, source)
-      })
-      applySourceMap(file, map)
+      file.contents = new Buffer(result.css)
+
+      // Apply source map to the chain
+      if (file.sourceMap) {
+        map = result.map.toJSON()
+        map.file = file.relative
+        map.sources = [].map.call(map.sources, function (source) {
+          return path.relative(file.base, source)
+        })
+        applySourceMap(file, map)
+      }
+
+      cb(null, file)
     }
 
-    cb(null, file)
+    function handleError (error) {
+      cb(new gutil.PluginError('gulp-postcss', error))
+    }
+
   }
 
+  return stream
 }

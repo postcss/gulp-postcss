@@ -4,7 +4,7 @@
   "description": "PostCSS gulp plugin",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha test.js"
   },
   "repository": {
     "type": "git",
@@ -22,13 +22,13 @@
   },
   "homepage": "https://github.com/w0rm/gulp-postcss",
   "dependencies": {
-    "gulp-util": "^3.0.0",
-    "postcss": "^4.0.1",
-    "through2": "^0.6.1",
-    "vinyl-sourcemaps-apply": "^0.1.1"
+    "gulp-util": "^3.0.4",
+    "postcss": "git+ssh://git@github.com:postcss/postcss.git",
+    "vinyl-sourcemaps-apply": "^0.1.4"
   },
   "devDependencies": {
-    "gulp-sourcemaps": "^1.1.5",
-    "mocha": "^1.21.4"
+    "gulp-sourcemaps": "^1.5.1",
+    "mocha": "^2.2.1",
+    "promise": "^6.1.0"
   }
 }
