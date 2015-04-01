@@ -70,6 +70,9 @@ return gulp.src('./src/*.css')
 
 ## Changelog
 
+* 5.0.0
+  * Use async API
+
 * 4.0.3
   * Fixed bug with relative source map
 

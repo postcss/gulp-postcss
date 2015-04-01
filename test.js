@@ -4,11 +4,12 @@ var assert = require('assert')
 var gutil = require('gulp-util')
 var sourceMaps = require('gulp-sourcemaps')
 var postcss = require('./index')
+var Promise = require('promise')
 
 it('should transform css with multiple processors', function (cb) {
 
   var stream = postcss(
-    [ doubler, doubler ]
+    [ asyncDoubler, doubler ]
   )
 
   stream.on('data', function (file) {
@@ -46,7 +47,7 @@ it('should correctly wrap postcss errors', function (cb) {
 })
 
 
-it ('should throw error if processors are not provided', function (cb) {
+it('should throw error if processors are not provided', function (cb) {
   assert.throws( function () { postcss() }, gutil.PluginError )
   assert.throws( function () { postcss('') }, gutil.PluginError )
   assert.throws( function () { postcss({}) }, gutil.PluginError )
@@ -54,12 +55,12 @@ it ('should throw error if processors are not provided', function (cb) {
 })
 
 
-it ('should generate source maps', function (cb) {
+it('should generate source maps', function (cb) {
 
   var init = sourceMaps.init()
   var write = sourceMaps.write()
   var css = postcss(
-    [ doubler, doubler ]
+    [ doubler, asyncDoubler ]
   )
 
   init
@@ -67,7 +68,7 @@ it ('should generate source maps', function (cb) {
     .pipe(write)
 
   write.on('data', function (file) {
-    assert.equal(file.sourceMap.mappings, 'AAAA,IAAI,cAAA,AAAY,cAAZ,AAAY,cAAZ,AAAY,aAAA,EAAE')
+    assert.equal(file.sourceMap.mappings, 'AAAA,IAAI,aAAY,CAAZ,aAAY,CAAZ,aAAY,CAAZ,YAAY,EAAE')
     assert(/sourceMappingURL=data:application\/json;base64/.test(file.contents.toString()))
     cb()
   })
@@ -83,7 +84,7 @@ it ('should generate source maps', function (cb) {
 })
 
 
-it ('should correctly generate relative source map', function (cb) {
+it('should correctly generate relative source map', function (cb) {
 
   var init = sourceMaps.init()
   var css = postcss(
@@ -112,5 +113,14 @@ it ('should correctly generate relative source map', function (cb) {
 function doubler (css) {
   css.eachDecl(function (decl) {
     decl.parent.prepend(decl.clone())
+  })
+}
+
+function asyncDoubler (css) {
+  return new Promise(function (resolve) {
+    setTimeout(function () {
+      doubler(css)
+      resolve()
+    })
   })
 }
