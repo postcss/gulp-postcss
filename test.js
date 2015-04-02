@@ -1,10 +1,11 @@
-/* global it */
+/* global it, Promise */
 
+require('es6-promise').polyfill()
 var assert = require('assert')
 var gutil = require('gulp-util')
 var sourceMaps = require('gulp-sourcemaps')
 var postcss = require('./index')
-var Promise = require('promise')
+
 
 it('should transform css with multiple processors', function (cb) {
 
