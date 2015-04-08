@@ -10,7 +10,7 @@ var postcss = require('./index')
 it('should transform css with multiple processors', function (cb) {
 
   var stream = postcss(
-    [ asyncDoubler, doubler ]
+    [ asyncDoubler, objectDoubler() ]
   )
 
   stream.on('data', function (file) {
@@ -124,4 +124,10 @@ function asyncDoubler (css) {
       resolve()
     })
   })
+}
+
+function objectDoubler () {
+  var processor = require('postcss')()
+  processor.use(doubler)
+  return processor
 }
