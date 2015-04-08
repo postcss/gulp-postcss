@@ -43,7 +43,7 @@ var opacity = function (css, opts) {
                 value: '"progid:DXImageTransform.Microsoft.Alpha(Opacity=' + (parseFloat(decl.value) * 100) + ')"'
             });
         }
-    }
+    });
 };
 
 gulp.task('css', function () {
