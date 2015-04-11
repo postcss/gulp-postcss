@@ -1,4 +1,4 @@
-/* global it, beforeEach, afterEach, describe, Promise */
+/* global it, afterEach, describe, Promise */
 
 var assert = require('assert')
 var gutil = require('gulp-util')

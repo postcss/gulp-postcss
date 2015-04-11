@@ -13,6 +13,7 @@
   "keywords": [
     "gulpplugin",
     "postcss",
+    "postcssrunner",
     "css"
   ],
   "author": "Andrey Kuzmin <unsoundscapes@gmail.com>",
