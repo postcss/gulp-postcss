@@ -32,7 +32,7 @@ module.exports = function (processors, options) {
       }
     }
 
-    opts.from = file.path
+    opts.from = opts.to = file.path
 
     // Generate separate source map for gulp-sourcemap
     if (file.sourceMap) {
@@ -58,7 +58,7 @@ module.exports = function (processors, options) {
         map = result.map.toJSON()
         map.file = file.relative
         map.sources = [].map.call(map.sources, function (source) {
-          return path.relative(file.base, source)
+          return path.join(path.dirname(file.relative), source)
         })
         applySourceMap(file, map)
       }
