@@ -3,6 +3,8 @@ var postcss = require('postcss')
 var applySourceMap = require('vinyl-sourcemaps-apply')
 var gutil = require('gulp-util')
 var path = require('path')
+var CssSyntaxError = require('postcss/lib/css-syntax-error')
+
 
 module.exports = function (processors, options) {
 
@@ -32,7 +34,7 @@ module.exports = function (processors, options) {
       }
     }
 
-    opts.from = file.path
+    opts.from = opts.to = file.path
 
     // Generate separate source map for gulp-sourcemap
     if (file.sourceMap) {
@@ -50,6 +52,7 @@ module.exports = function (processors, options) {
 
     function handleResult (result) {
       var map
+      var warnings = result.warnings().join('\n')
 
       file.contents = new Buffer(result.css)
 
@@ -58,15 +61,24 @@ module.exports = function (processors, options) {
         map = result.map.toJSON()
         map.file = file.relative
         map.sources = [].map.call(map.sources, function (source) {
-          return path.relative(file.base, source)
+          return path.join(path.dirname(file.relative), source)
         })
         applySourceMap(file, map)
+      }
+
+      if (warnings) {
+        gutil.log('gulp-postcss:', file.relative + '\n' + warnings)
       }
 
       cb(null, file)
     }
 
     function handleError (error) {
+      var errorOptions = { fileName: file.path }
+      if (error instanceof CssSyntaxError) {
+        error = error.message + error.showSourceCode()
+        errorOptions.showStack = false
+      }
       cb(new gutil.PluginError('gulp-postcss', error))
     }
 

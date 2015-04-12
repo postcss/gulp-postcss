@@ -72,6 +72,11 @@ return gulp.src('./src/*.css')
 
 ## Changelog
 
+* 5.1.0 PostCSS Runner Guidelines
+  * Set `from` and `to` processing options
+  * Don't output js stack trace for `CssSyntaxError`
+  * Display `result.warnings()` content
+
 * 5.0.1
   * Fix to support object processors
 

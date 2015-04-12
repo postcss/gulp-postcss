@@ -1,6 +1,6 @@
 {
   "name": "gulp-postcss",
-  "version": "5.0.1",
+  "version": "5.1.0",
   "description": "PostCSS gulp plugin",
   "main": "index.js",
   "scripts": {
@@ -13,6 +13,7 @@
   "keywords": [
     "gulpplugin",
     "postcss",
+    "postcssrunner",
     "css"
   ],
   "author": "Andrey Kuzmin <unsoundscapes@gmail.com>",
@@ -29,6 +30,8 @@
   "devDependencies": {
     "es6-promise": "^2.0.1",
     "gulp-sourcemaps": "^1.5.1",
-    "mocha": "^2.2.1"
+    "mocha": "^2.2.1",
+    "proxyquire": "^1.4.0",
+    "sinon": "^1.14.1"
   }
 }
