@@ -7,8 +7,6 @@ several processors, but parse CSS only once.
 
     $ npm install --save-dev gulp-postcss
 
-To use with node.js 0.10 add a polyfill for [Promise](https://github.com/jakearchibald/es6-promise).
-
 ## Basic usage
 
 ```js
