@@ -52,6 +52,7 @@ module.exports = function (processors, options) {
 
     function handleResult (result) {
       var map
+      var warnings = result.warnings().join('\n')
 
       file.contents = new Buffer(result.css)
 
@@ -63,6 +64,10 @@ module.exports = function (processors, options) {
           return path.join(path.dirname(file.relative), source)
         })
         applySourceMap(file, map)
+      }
+
+      if (warnings) {
+        gutil.log('gulp-postcss:', file.relative + '\n' + warnings)
       }
 
       cb(null, file)
