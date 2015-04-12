@@ -115,6 +115,13 @@ it('should correctly generate relative source map', function (cb) {
 describe('PostCSS Guidelines', function () {
 
   var sandbox = sinon.sandbox.create()
+  var CssSyntaxError = function (message, sourceCode) {
+    this.message = message
+    this.sourceCode = sourceCode
+    this.showSourceCode = function () {
+      return this.sourceCode
+    }
+  }
   var postcssStub = {
     use: sandbox.stub()
   , process: sandbox.stub()
@@ -123,6 +130,7 @@ describe('PostCSS Guidelines', function () {
     postcss: function () {
       return postcssStub
     }
+  , 'postcss/lib/css-syntax-error': CssSyntaxError
   })
 
 
@@ -145,6 +153,27 @@ describe('PostCSS Guidelines', function () {
     stream.write(new gutil.File({
       contents: new Buffer('a {}')
     , path: cssPath
+    }))
+
+    stream.end()
+
+  })
+
+
+  it('should not output js stack trace for `CssSyntaxError`', function (cb) {
+
+    var stream = postcss([ doubler ])
+    var cssSyntaxError = new CssSyntaxError('message', 'sourceCode')
+    postcssStub.process.returns(Promise.reject(cssSyntaxError))
+
+    stream.on('error', function (error) {
+      assert.equal(error.showStack, false)
+      assert.equal(error.message, 'message' + 'sourceCode')
+      cb()
+    })
+
+    stream.write(new gutil.File({
+      contents: new Buffer('a {}')
     }))
 
     stream.end()
