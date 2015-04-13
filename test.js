@@ -1,4 +1,4 @@
-/* global it, afterEach, describe, Promise */
+/* global it, afterEach, beforeEach, describe, Promise */
 
 require('es6-promise').polyfill()
 var assert = require('assert')
@@ -123,8 +123,8 @@ describe('PostCSS Guidelines', function () {
     }
   }
   var postcssStub = {
-    use: sandbox.stub()
-  , process: sandbox.stub()
+    use: function () {}
+  , process: function () {}
   }
   var postcss = proxyquire('./index', {
     postcss: function () {
@@ -133,6 +133,10 @@ describe('PostCSS Guidelines', function () {
   , 'postcss/lib/css-syntax-error': CssSyntaxError
   })
 
+  beforeEach(function () {
+    sandbox.stub(postcssStub, 'use')
+    sandbox.stub(postcssStub, 'process')
+  })
 
   afterEach(function () {
     sandbox.restore()
@@ -151,7 +155,8 @@ describe('PostCSS Guidelines', function () {
     }))
 
     stream.on('data', function () {
-      postcssStub.process.calledWith('a {}', {from: cssPath, to: cssPath})
+      assert.equal(postcssStub.process.getCall(0).args[1].to, cssPath)
+      assert.equal(postcssStub.process.getCall(0).args[1].from, cssPath)
       cb()
     })
 
@@ -164,6 +169,28 @@ describe('PostCSS Guidelines', function () {
 
   })
 
+  it('should allow override of `to` processing option', function (cb) {
+
+    var stream = postcss([ doubler ], {to: 'overriden'})
+    postcssStub.process.returns(Promise.resolve({
+      css: ''
+    , warnings: function () {
+        return []
+      }
+    }))
+
+    stream.on('data', function () {
+      assert.equal(postcssStub.process.getCall(0).args[1].to, 'overriden')
+      cb()
+    })
+
+    stream.write(new gutil.File({
+      contents: new Buffer('a {}')
+    }))
+
+    stream.end()
+
+  })
 
   it('should not output js stack trace for `CssSyntaxError`', function (cb) {
 
