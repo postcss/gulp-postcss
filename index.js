@@ -34,7 +34,8 @@ module.exports = function (processors, options) {
       }
     }
 
-    opts.from = opts.to = file.path
+    opts.from = file.path
+    opts.to = opts.to || file.path
 
     // Generate separate source map for gulp-sourcemap
     if (file.sourceMap) {
