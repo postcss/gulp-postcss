@@ -70,6 +70,9 @@ return gulp.src('./src/*.css')
 
 ## Changelog
 
+* 5.1.1
+  * Allow override of `to` option
+
 * 5.1.0 PostCSS Runner Guidelines
   * Set `from` and `to` processing options
   * Don't output js stack trace for `CssSyntaxError`
