@@ -1,4 +1,4 @@
-# gulp-postcss [![Build Status](https://api.travis-ci.org/w0rm/gulp-postcss.png)](https://travis-ci.org/w0rm/gulp-postcss)
+# gulp-postcss [![Build Status](https://api.travis-ci.org/postcss/gulp-postcss.png)](https://travis-ci.org/postcss/gulp-postcss)
 
 [PostCSS](https://github.com/postcss/postcss) gulp plugin to pipe CSS through
 several processors, but parse CSS only once.
@@ -70,8 +70,9 @@ return gulp.src('./src/*.css')
 
 ## Changelog
 
-* 5.1.2
-  * Transferred repo into postcss org on github
+* 5.1.3 Updated travis banner
+
+* 5.1.2 Transferred repo into postcss org on github
 
 * 5.1.1
   * Allow override of `to` option
