@@ -70,6 +70,9 @@ return gulp.src('./src/*.css')
 
 ## Changelog
 
+* 5.1.2
+  * Transferred repo into postcss org on github
+
 * 5.1.1
   * Allow override of `to` option
 

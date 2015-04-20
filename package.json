@@ -1,6 +1,6 @@
 {
   "name": "gulp-postcss",
-  "version": "5.1.1",
+  "version": "5.1.2",
   "description": "PostCSS gulp plugin",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/w0rm/gulp-postcss.git"
+    "url": "https://github.com/postcss/gulp-postcss.git"
   },
   "keywords": [
     "gulpplugin",
@@ -19,9 +19,9 @@
   "author": "Andrey Kuzmin <unsoundscapes@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/w0rm/gulp-postcss/issues"
+    "url": "https://github.com/postcss/gulp-postcss/issues"
   },
-  "homepage": "https://github.com/w0rm/gulp-postcss",
+  "homepage": "https://github.com/postcss/gulp-postcss",
   "dependencies": {
     "gulp-util": "^3.0.4",
     "postcss": "^4.1.0",
