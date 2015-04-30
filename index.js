@@ -42,14 +42,10 @@ module.exports = function (processors, options) {
       opts.map = { annotation: false }
     }
 
-    try {
-      processors.forEach(processor.use.bind(processor))
-      processor
-        .process(file.contents, opts)
-        .then(handleResult, handleError)
-    } catch (error) {
-      handleError(error)
-    }
+    processors.forEach(processor.use.bind(processor))
+    processor
+      .process(file.contents, opts)
+      .then(handleResult, handleError)
 
     function handleResult (result) {
       var map
