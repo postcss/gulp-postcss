@@ -70,6 +70,10 @@ return gulp.src('./src/*.css')
 
 ## Changelog
 
+* 5.1.4
+  * Simplified error handling
+  * Simplified postcss execution with object processors
+
 * 5.1.3 Updated travis banner
 
 * 5.1.2 Transferred repo into postcss org on github
