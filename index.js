@@ -23,7 +23,6 @@ module.exports = function (processors, options) {
     // Source map is disabled by default
     var opts = { map: false }
     var attr
-    var processor = postcss()
 
     // Extend default options
     if (options) {
@@ -42,8 +41,7 @@ module.exports = function (processors, options) {
       opts.map = { annotation: false }
     }
 
-    processors.forEach(processor.use.bind(processor))
-    processor
+    postcss(processors)
       .process(file.contents, opts)
       .then(handleResult, handleError)
 
