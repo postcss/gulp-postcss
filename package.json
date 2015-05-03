@@ -1,6 +1,6 @@
 {
   "name": "gulp-postcss",
-  "version": "5.1.4",
+  "version": "5.1.5",
   "description": "PostCSS gulp plugin",
   "main": "index.js",
   "scripts": {
@@ -13,7 +13,7 @@
   "keywords": [
     "gulpplugin",
     "postcss",
-    "postcssrunner",
+    "postcss-runner",
     "css"
   ],
   "author": "Andrey Kuzmin <unsoundscapes@gmail.com>",
