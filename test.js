@@ -116,6 +116,7 @@ describe('PostCSS Guidelines', function () {
 
   var sandbox = sinon.sandbox.create()
   var CssSyntaxError = function (message, sourceCode) {
+    this.name = 'CssSyntaxError'
     this.message = message
     this.sourceCode = sourceCode
     this.showSourceCode = function () {
@@ -130,7 +131,6 @@ describe('PostCSS Guidelines', function () {
     postcss: function () {
       return postcssStub
     }
-  , 'postcss/lib/css-syntax-error': CssSyntaxError
   })
 
   beforeEach(function () {

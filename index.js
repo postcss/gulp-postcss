@@ -3,7 +3,6 @@ var postcss = require('postcss')
 var applySourceMap = require('vinyl-sourcemaps-apply')
 var gutil = require('gulp-util')
 var path = require('path')
-var CssSyntaxError = require('postcss/lib/css-syntax-error')
 
 
 module.exports = function (processors, options) {
@@ -70,7 +69,7 @@ module.exports = function (processors, options) {
 
     function handleError (error) {
       var errorOptions = { fileName: file.path }
-      if (error instanceof CssSyntaxError) {
+      if (error.name === 'CssSyntaxError') {
         error = error.message + error.showSourceCode()
         errorOptions.showStack = false
       }

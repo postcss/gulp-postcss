@@ -70,6 +70,9 @@ return gulp.src('./src/*.css')
 
 ## Changelog
 
+* 5.1.5
+  * Updated `CssSyntaxError` check
+
 * 5.1.4
   * Simplified error handling
   * Simplified postcss execution with object processors
