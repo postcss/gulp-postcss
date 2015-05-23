@@ -70,6 +70,9 @@ return gulp.src('./src/*.css')
 
 ## Changelog
 
+* 5.1.7
+  * Updated direct dependencies
+
 * 5.1.6
   * Updated `CssSyntaxError` check
 
