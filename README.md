@@ -70,6 +70,9 @@ return gulp.src('./src/*.css')
 
 ## Changelog
 
+* 5.1.8
+  * Prevent stream’s unhandled exception from being suppressed by Promise
+
 * 5.1.7
   * Updated direct dependencies
 

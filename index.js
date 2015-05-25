@@ -73,7 +73,11 @@ module.exports = function (processors, options) {
         error = error.message + error.showSourceCode()
         errorOptions.showStack = false
       }
-      cb(new gutil.PluginError('gulp-postcss', error))
+      // Prevent stream’s unhandled exception from
+      // being suppressed by Promise
+      setImmediate(function () {
+        cb(new gutil.PluginError('gulp-postcss', error))
+      })
     }
 
   }
