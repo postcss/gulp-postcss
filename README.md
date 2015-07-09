@@ -7,6 +7,8 @@ several processors, but parse CSS only once.
 
     $ npm install --save-dev gulp-postcss
 
+Install required [postcss plugins](https://www.npmjs.com/browse/keyword/postcss-plugin) separately. E.g. for autoprefixer, you need to install [autoprefixer-core](https://github.com/postcss/autoprefixer-core) package.
+
 ## Basic usage
 
 ```js
