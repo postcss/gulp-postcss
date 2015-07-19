@@ -7,14 +7,14 @@ several processors, but parse CSS only once.
 
     $ npm install --save-dev gulp-postcss
 
-Install required [postcss plugins](https://www.npmjs.com/browse/keyword/postcss-plugin) separately. E.g. for autoprefixer, you need to install [autoprefixer-core](https://github.com/postcss/autoprefixer-core) package.
+Install required [postcss plugins](https://www.npmjs.com/browse/keyword/postcss-plugin) separately. E.g. for autoprefixer, you need to install [autoprefixer](https://github.com/postcss/autoprefixer) package.
 
 ## Basic usage
 
 ```js
 var postcss = require('gulp-postcss');
 var gulp = require('gulp');
-var autoprefixer = require('autoprefixer-core');
+var autoprefixer = require('autoprefixer');
 var mqpacker = require('css-mqpacker');
 var csswring = require('csswring');
 
@@ -34,7 +34,7 @@ gulp.task('css', function () {
 
 ```js
 var postcss = require('gulp-postcss');
-var autoprefixer = require('autoprefixer-core');
+var autoprefixer = require('autoprefixer');
 var cssnext = require('cssnext');
 var opacity = function (css, opts) {
     css.eachDecl(function(decl) {
@@ -73,6 +73,9 @@ return gulp.src('./src/*.css')
 ```
 
 ## Changelog
+
+* 5.1.10
+  * Use autoprefixer in README
 
 * 5.1.9
   * Prevent unhandled exception of the following pipes from being suppressed by Promise
