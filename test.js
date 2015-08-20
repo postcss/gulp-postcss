@@ -250,7 +250,7 @@ describe('PostCSS Guidelines', function () {
 
 
 function doubler (css) {
-  css.eachDecl(function (decl) {
+  css.walkDecls(function (decl) {
     decl.parent.prepend(decl.clone())
   })
 }

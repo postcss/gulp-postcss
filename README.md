@@ -74,6 +74,9 @@ return gulp.src('./src/*.css')
 
 ## Changelog
 
+* 6.0.0
+  * Updated PostCSS to version 5.0.0
+
 * 5.1.10
   * Use autoprefixer in README
 
