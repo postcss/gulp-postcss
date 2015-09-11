@@ -1,6 +1,6 @@
 {
   "name": "gulp-html-postcss",
-  "version": "5.0.1",
+  "version": "6.0.1",
   "description": "Process inline CSS in HTML using PostCSS gulp plugin",
   "main": "index.js",
   "scripts": {
