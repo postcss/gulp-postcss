@@ -1,31 +1,39 @@
 {
-  "name": "gulp-postcss",
-  "version": "6.0.0",
-  "description": "PostCSS gulp plugin",
+  "name": "gulp-html-postcss",
+  "version": "5.0.1",
+  "description": "Process inline CSS in HTML using PostCSS gulp plugin",
   "main": "index.js",
   "scripts": {
     "test": "mocha test.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/postcss/gulp-postcss.git"
+    "url": "https://github.com/StartPolymer/gulp-html-postcss.git"
   },
   "keywords": [
     "gulpplugin",
     "postcss",
     "postcss-runner",
-    "css"
+    "css",
+    "html"
   ],
-  "author": "Andrey Kuzmin <unsoundscapes@gmail.com>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/postcss/gulp-postcss/issues"
+  "author": "Start Polymer Authors (http://startpolymer.org/AUTHORS.txt)",
+  "contributors": [
+    "Andrey Kuzmin <unsoundscapes@gmail.com>"
+  ],
+  "license": {
+    "type": "MIT",
+    "url": "http://startpolymer.org/LICENSE.txt"
   },
-  "homepage": "https://github.com/postcss/gulp-postcss",
+  "bugs": {
+    "url": "https://github.com/StartPolymer/gulp-html-postcss/issues"
+  },
+  "homepage": "https://github.com/StartPolymer/gulp-html-postcss",
   "dependencies": {
     "gulp-util": "^3.0.4",
     "postcss": "^5.0.0",
-    "vinyl-sourcemaps-apply": "^0.1.4"
+    "vinyl-sourcemaps-apply": "^0.1.4",
+    "cheerio": "^0.19.0"
   },
   "devDependencies": {
     "es6-promise": "^2.0.1",

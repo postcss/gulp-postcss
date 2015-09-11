@@ -3,6 +3,7 @@ var postcss = require('postcss')
 var applySourceMap = require('vinyl-sourcemaps-apply')
 var gutil = require('gulp-util')
 var path = require('path')
+var cheerio = require('cheerio')
 
 
 module.exports = function (processors, options) {
@@ -40,48 +41,52 @@ module.exports = function (processors, options) {
       opts.map = { annotation: false }
     }
 
-    postcss(processors)
-      .process(file.contents, opts)
-      .then(handleResult, handleError)
+    var $ = cheerio.load(file.contents)
+    $('style').contents().each(function(index, style) {
+      postcss(processors)
+        .process(style.data, opts)
+        .then(handleResult, handleError)
 
-    function handleResult (result) {
-      var map
-      var warnings = result.warnings().join('\n')
+      function handleResult (result) {
+        var map
+        var warnings = result.warnings().join('\n')
+        file.contents = new Buffer(result.css)
 
-      file.contents = new Buffer(result.css)
+        // Apply source map to the chain
+        if (file.sourceMap) {
+          map = result.map.toJSON()
+          map.file = file.relative
+          map.sources = [].map.call(map.sources, function (source) {
+            return path.join(path.dirname(file.relative), source)
+          })
+          applySourceMap(file, map)
+        }
 
-      // Apply source map to the chain
-      if (file.sourceMap) {
-        map = result.map.toJSON()
-        map.file = file.relative
-        map.sources = [].map.call(map.sources, function (source) {
-          return path.join(path.dirname(file.relative), source)
+        if (warnings) {
+          gutil.log('gulp-postcss:', file.relative + '\n' + warnings)
+        }
+
+        style.data = file.contents.toString('utf-8')
+        file.contents = new Buffer($.html())
+      }
+
+      function handleError (error) {
+        var errorOptions = { fileName: file.path }
+        if (error.name === 'CssSyntaxError') {
+          error = error.message + error.showSourceCode()
+          errorOptions.showStack = false
+        }
+        // Prevent stream’s unhandled exception from
+        // being suppressed by Promise
+        setImmediate(function () {
+          cb(new gutil.PluginError('gulp-postcss', error))
         })
-        applySourceMap(file, map)
       }
+    })
 
-      if (warnings) {
-        gutil.log('gulp-postcss:', file.relative + '\n' + warnings)
-      }
-
-      setImmediate(function () {
-        cb(null, file)
-      })
-    }
-
-    function handleError (error) {
-      var errorOptions = { fileName: file.path }
-      if (error.name === 'CssSyntaxError') {
-        error = error.message + error.showSourceCode()
-        errorOptions.showStack = false
-      }
-      // Prevent stream’s unhandled exception from
-      // being suppressed by Promise
-      setImmediate(function () {
-        cb(new gutil.PluginError('gulp-postcss', error))
-      })
-    }
-
+    setImmediate(function () {
+      cb(null, file)
+    })
   }
 
   return stream
