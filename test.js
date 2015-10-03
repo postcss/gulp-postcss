@@ -245,6 +245,40 @@ describe('PostCSS Guidelines', function () {
 
   })
 
+  it('should pass options down to PostCSS', function (cb) {
+
+    var customSyntax = function () {}
+    var options = {
+      syntax: customSyntax
+    }
+
+    var stream = postcss([ doubler ], options)
+    var cssPath = __dirname + '/src/fixture.css'
+    postcssStub.process.returns(Promise.resolve({
+      css: ''
+    , warnings: function () {
+        return []
+      }
+    }))
+
+    stream.on('data', function () {
+      var resultOptions = postcssStub.process.getCall(0).args[1]
+      // remove automatically set options
+      delete resultOptions.from
+      delete resultOptions.to
+      delete resultOptions.map
+      assert.deepEqual(resultOptions, options)
+      cb()
+    })
+
+    stream.write(new gutil.File({
+      contents: new Buffer('a {}')
+    , path: cssPath
+    }))
+
+    stream.end()
+
+  })
 
 })
 
