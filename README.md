@@ -96,6 +96,7 @@ return gulp.src('./src/*.css')
 
 * 6.0.1
   * Added an example and a test to pass options to PostCSS (e.g. `syntax` option)
+  * Updated vinyl-sourcemaps-apply to 0.2.0
 
 * 6.0.0
   * Updated PostCSS to version 5.0.0
