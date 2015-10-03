@@ -30,6 +30,26 @@ gulp.task('css', function () {
 });
 ```
 
+## Passing additional options to PostCSS
+
+The second optional argument to gulp-postcss is passed to PostCSS.
+
+This, for instance, may be used to enable custom syntax:
+
+```js
+var gulp = require('gulp');
+var postcss = require('gulp-postcss');
+var nested = require('postcss-nested');
+var scss = require('postcss-scss');
+
+gulp.task('default', function () {
+    var processors = [nested];
+    return gulp.src('in.css')
+        .pipe(postcss(processors, {syntax: scss}))
+        .pipe(gulp.dest('out'));
+});
+```
+
 ## Using a custom processor
 
 ```js
@@ -73,6 +93,9 @@ return gulp.src('./src/*.css')
 ```
 
 ## Changelog
+
+* 6.0.1
+  * Added an example and a test to pass options to PostCSS (e.g. `syntax` option)
 
 * 6.0.0
   * Updated PostCSS to version 5.0.0
