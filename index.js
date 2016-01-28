@@ -15,6 +15,11 @@ module.exports = function (processors, options) {
 
   stream._transform = function (file, encoding, cb) {
 
+    if (file.isNull()) {
+      this.push(file);
+      return cb();
+    }
+
     if (file.isStream()) {
       return handleError('Streams are not supported!')
     }
