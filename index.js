@@ -16,8 +16,7 @@ module.exports = function (processors, options) {
   stream._transform = function (file, encoding, cb) {
 
     if (file.isNull()) {
-      this.push(file);
-      return cb();
+      return cb(null, file)
     }
 
     if (file.isStream()) {
