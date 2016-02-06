@@ -8,6 +8,22 @@ var postcss = require('./index')
 var proxyquire = require('proxyquire')
 var sinon = require('sinon')
 
+it('should pass file when it isNull()', function (cb) {
+  var stream = postcss([ doubler ])
+  var emptyFile = {
+    isNull: function () { return true }
+  }
+
+  stream.once('data', function (data) {
+    assert.equal(data, emptyFile)
+    cb()
+  })
+  
+  stream.write(emptyFile)
+  
+  stream.end()
+})
+
 it('should transform css with multiple processors', function (cb) {
 
   var stream = postcss(
