@@ -1,6 +1,6 @@
 {
   "name": "gulp-postcss",
-  "version": "6.0.1",
+  "version": "6.1.0",
   "description": "PostCSS gulp plugin",
   "main": "index.js",
   "scripts": {
@@ -23,15 +23,15 @@
   },
   "homepage": "https://github.com/postcss/gulp-postcss",
   "dependencies": {
-    "gulp-util": "^3.0.4",
-    "postcss": "^5.0.0",
+    "gulp-util": "^3.0.7",
+    "postcss": "^5.0.14",
     "vinyl-sourcemaps-apply": "^0.2.0"
   },
   "devDependencies": {
-    "es6-promise": "^2.0.1",
+    "es6-promise": "^3.0.2",
     "gulp-sourcemaps": "^1.5.1",
     "mocha": "^2.2.5",
-    "proxyquire": "^1.5.0",
-    "sinon": "^1.14.1"
+    "proxyquire": "^1.7.4",
+    "sinon": "^1.17.3"
   }
 }

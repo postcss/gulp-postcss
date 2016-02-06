@@ -94,6 +94,10 @@ return gulp.src('./src/*.css')
 
 ## Changelog
 
+* 6.1.0
+  * Support for `null` files
+  * Updated dependencies
+
 * 6.0.1
   * Added an example and a test to pass options to PostCSS (e.g. `syntax` option)
   * Updated vinyl-sourcemaps-apply to 0.2.0
