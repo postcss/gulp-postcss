@@ -54,7 +54,6 @@ gulp.task('default', function () {
 
 ```js
 var postcss = require('gulp-postcss');
-var autoprefixer = require('autoprefixer');
 var cssnext = require('cssnext');
 var opacity = function (css, opts) {
     css.eachDecl(function(decl) {
@@ -69,9 +68,8 @@ var opacity = function (css, opts) {
 
 gulp.task('css', function () {
     var processors = [
-        autoprefixer({browsers: ['last 1 version']}),
         opacity,
-        cssnext()
+        cssnext({browsers: ['last 1 version']})
     ];
     return gulp.src('./src/*.css')
         .pipe(postcss(processors))
