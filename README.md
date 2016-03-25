@@ -15,14 +15,12 @@ Install required [postcss plugins](https://www.npmjs.com/browse/keyword/postcss-
 var postcss = require('gulp-postcss');
 var gulp = require('gulp');
 var autoprefixer = require('autoprefixer');
-var mqpacker = require('css-mqpacker');
-var csswring = require('csswring');
+var cssnano = require('cssnano');
 
 gulp.task('css', function () {
     var processors = [
         autoprefixer({browsers: ['last 1 version']}),
-        mqpacker,
-        csswring
+        cssnano(),
     ];
     return gulp.src('./src/*.css')
         .pipe(postcss(processors))
@@ -54,8 +52,7 @@ gulp.task('default', function () {
 
 ```js
 var postcss = require('gulp-postcss');
-var autoprefixer = require('autoprefixer');
-var cssnext = require('cssnext');
+var cssnext = require('postcss-cssnext');
 var opacity = function (css, opts) {
     css.eachDecl(function(decl) {
         if (decl.prop === 'opacity') {
@@ -69,9 +66,8 @@ var opacity = function (css, opts) {
 
 gulp.task('css', function () {
     var processors = [
-        autoprefixer({browsers: ['last 1 version']}),
+        cssnext({browsers: ['last 1 version']}),
         opacity,
-        cssnext()
     ];
     return gulp.src('./src/*.css')
         .pipe(postcss(processors))
