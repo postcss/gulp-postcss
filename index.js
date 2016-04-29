@@ -82,7 +82,7 @@ module.exports = function (processors, options) {
       // Prevent stream’s unhandled exception from
       // being suppressed by Promise
       setImmediate(function () {
-        cb(new gutil.PluginError('gulp-postcss', error))
+        cb(new gutil.PluginError('gulp-postcss', error, errorOptions))
       })
     }
 
