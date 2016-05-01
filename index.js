@@ -74,7 +74,7 @@ module.exports = function (processors, options) {
     }
 
     function handleError (error) {
-      var errorOptions = { fileName: file.path }
+      var errorOptions = { fileName: file.path, showStack: true }
       if (error.name === 'CssSyntaxError') {
         error = error.message + error.showSourceCode()
         errorOptions.showStack = false
