@@ -90,6 +90,9 @@ return gulp.src('./src/*.css')
 
 ## Changelog
 
+* 6.1.1
+  * Fixed the error output
+
 * 6.1.0
   * Support for `null` files
   * Updated dependencies

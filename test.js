@@ -54,13 +54,13 @@ it('should correctly wrap postcss errors', function (cb) {
     assert.ok(err instanceof gutil.PluginError)
     assert.equal(err.plugin, 'gulp-postcss')
     assert.equal(err.showStack, false)
-    assert.equal(err.fileName, "testpath")
+    assert.equal(err.fileName, 'testpath')
     cb()
   })
 
   stream.write(new gutil.File({
     contents: new Buffer('a {'),
-    path: "testpath"
+    path: 'testpath'
   }))
 
   stream.end()
@@ -74,16 +74,15 @@ it('should respond with error on stream files', function (cb) {
   stream.on('error', function (err) {
     assert.ok(err instanceof gutil.PluginError)
     assert.equal(err.plugin, 'gulp-postcss')
-    console.log(err)
     assert.equal(err.showStack, true)
-    assert.equal(err.fileName, "testpath")
+    assert.equal(err.fileName, 'testpath')
     cb()
   })
 
   var streamFile = {
     isStream: function () { return true },
     isNull: function() { return false },
-    path: "testpath"
+    path: 'testpath'
   };
 
   stream.write(streamFile)
