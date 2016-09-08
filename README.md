@@ -90,6 +90,9 @@ return gulp.src('./src/*.css')
 
 ## Changelog
 
+* 6.2.0
+  * Fix syntax error message for PostCSS 5.2 compatibility
+
 * 6.1.1
   * Fixed the error output
 
