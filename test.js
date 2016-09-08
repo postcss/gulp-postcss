@@ -243,7 +243,7 @@ describe('PostCSS Guidelines', function () {
 
     stream.on('error', function (error) {
       assert.equal(error.showStack, false)
-      assert.equal(error.message, 'message' + 'sourceCode')
+      assert.equal(error.message, 'message' + '\n\nsourceCode\n')
       cb()
     })
 
