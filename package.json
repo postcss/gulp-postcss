@@ -24,7 +24,7 @@
   "homepage": "https://github.com/postcss/gulp-postcss",
   "dependencies": {
     "gulp-util": "^3.0.7",
-    "postcss": "^5.0.14",
+    "postcss": "^5.2.0",
     "vinyl-sourcemaps-apply": "^0.2.0"
   },
   "devDependencies": {

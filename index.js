@@ -76,7 +76,7 @@ module.exports = function (processors, options) {
     function handleError (error) {
       var errorOptions = { fileName: file.path, showStack: true }
       if (error.name === 'CssSyntaxError') {
-        error = error.message + error.showSourceCode()
+        error = error.message + '\n\n' + error.showSourceCode() + '\n'
         errorOptions.showStack = false
       }
       // Prevent stream’s unhandled exception from
