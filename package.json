@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "es6-promise": "^3.0.2",
-    "gulp-sourcemaps": "^1.6.0",
+    "gulp-sourcemaps": "^1.5.1",
     "mocha": "^2.2.5",
     "proxyquire": "^1.7.4",
     "sinon": "^1.17.3"
