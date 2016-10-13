@@ -7,6 +7,7 @@ var sourceMaps = require('gulp-sourcemaps')
 var postcss = require('./index')
 var proxyquire = require('proxyquire')
 var sinon = require('sinon')
+var path = require('path')
 
 it('should pass file when it isNull()', function (cb) {
   var stream = postcss([ doubler ])
@@ -114,7 +115,7 @@ it('should generate source maps', function (cb) {
 
   write.on('data', function (file) {
     assert.equal(file.sourceMap.mappings, 'AAAA,IAAI,aAAY,CAAZ,aAAY,CAAZ,aAAY,CAAZ,YAAY,EAAE')
-    assert(/sourceMappingURL=data:application\/json;base64/.test(file.contents.toString()))
+    assert(/sourceMappingURL=data:application\/json;(?:charset=\w+;)?base64/.test(file.contents.toString()))
     cb()
   })
 
@@ -255,6 +256,39 @@ describe('PostCSS Guidelines', function () {
 
   })
 
+  it('should not display `result.warnings()` content', function (cb) {
+
+    var stream = postcss([ doubler ], {
+      warn: false
+    })
+    var cssPath = __dirname + '/src/fixture.css'
+    function Warning (msg) {
+      this.toString = function () {
+        return msg
+      }
+    }
+
+    sandbox.stub(gutil, 'log')
+    postcssStub.process.returns(Promise.resolve({
+      css: ''
+    , warnings: function () {
+        return [new Warning('msg1'), new Warning('msg2')]
+      }
+    }))
+
+    stream.on('data', function () {
+      assert(gutil.log.neverCalledWith('gulp-postcss:', 'src' +  path.sep + 'fixture.css\nmsg1\nmsg2'))
+      cb()
+    })
+
+    stream.write(new gutil.File({
+      contents: new Buffer('a {}')
+    , path: cssPath
+    }))
+
+    stream.end()
+
+  })
 
   it('should display `result.warnings()` content', function (cb) {
 
