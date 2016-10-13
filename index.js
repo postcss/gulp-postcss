@@ -23,12 +23,20 @@ module.exports = function (processors, options) {
       return handleError('Streams are not supported!')
     }
 
-    // Extend default options
-    var opts = Object.assign({
+    var opts = {
       // Source map is disabled by default
       map: false,
       warn: true,
-    }, options)
+    }
+
+    // Extend default options
+    if (options) {
+      for (attr in options) {
+        if (options.hasOwnProperty(attr)) {
+          opts[attr] = options[attr]
+        }
+      }
+    }
 
     opts.from = file.path
     opts.to = opts.to || file.path
