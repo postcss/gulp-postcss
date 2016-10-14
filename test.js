@@ -168,7 +168,7 @@ describe('PostCSS Guidelines', function () {
       return this.source
     }
     this.toString = function(){
-      let code = this.showSourceCode();
+      var code = this.showSourceCode();
       if ( code ) {
           code = '\n\n' + code + '\n';
       }
