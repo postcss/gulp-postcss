@@ -7,6 +7,7 @@ var sourceMaps = require('gulp-sourcemaps')
 var postcss = require('./index')
 var proxyquire = require('proxyquire')
 var sinon = require('sinon')
+var path = require('path')
 
 it('should pass file when it isNull()', function (cb) {
   var stream = postcss([ doubler ])
@@ -53,14 +54,15 @@ it('should correctly wrap postcss errors', function (cb) {
   stream.on('error', function (err) {
     assert.ok(err instanceof gutil.PluginError)
     assert.equal(err.plugin, 'gulp-postcss')
+    assert.equal(err.lineNumber, 1)
     assert.equal(err.showStack, false)
-    assert.equal(err.fileName, 'testpath')
+    assert.equal(err.fileName, path.resolve('testpath'))
     cb()
   })
 
   stream.write(new gutil.File({
     contents: new Buffer('a {'),
-    path: 'testpath'
+    path: path.resolve('testpath')
   }))
 
   stream.end()
@@ -74,15 +76,15 @@ it('should respond with error on stream files', function (cb) {
   stream.on('error', function (err) {
     assert.ok(err instanceof gutil.PluginError)
     assert.equal(err.plugin, 'gulp-postcss')
-    assert.equal(err.showStack, true)
-    assert.equal(err.fileName, 'testpath')
+    assert.equal(err.message, 'Streams are not supported!')
+    assert.equal(err.fileName, path.resolve('testpath'))
     cb()
   })
 
   var streamFile = {
     isStream: function () { return true },
     isNull: function() { return false },
-    path: 'testpath'
+    path: path.resolve('testpath')
   };
 
   stream.write(streamFile)
@@ -114,7 +116,7 @@ it('should generate source maps', function (cb) {
 
   write.on('data', function (file) {
     assert.equal(file.sourceMap.mappings, 'AAAA,IAAI,aAAY,CAAZ,aAAY,CAAZ,aAAY,CAAZ,YAAY,EAAE')
-    assert(/sourceMappingURL=data:application\/json;base64/.test(file.contents.toString()))
+    assert(/sourceMappingURL=data:application\/json;(?:charset=\w+;)?base64/.test(file.contents.toString()))
     cb()
   })
 
@@ -158,12 +160,19 @@ it('should correctly generate relative source map', function (cb) {
 describe('PostCSS Guidelines', function () {
 
   var sandbox = sinon.sandbox.create()
-  var CssSyntaxError = function (message, sourceCode) {
+  var CssSyntaxError = function (message, source) {
     this.name = 'CssSyntaxError'
     this.message = message
-    this.sourceCode = sourceCode
+    this.source = source
     this.showSourceCode = function () {
-      return this.sourceCode
+      return this.source
+    }
+    this.toString = function(){
+      let code = this.showSourceCode();
+      if ( code ) {
+          code = '\n\n' + code + '\n';
+      }
+      return this.name + ': ' + this.message + code;
     }
   }
   var postcssStub = {
@@ -238,12 +247,13 @@ describe('PostCSS Guidelines', function () {
   it('should not output js stack trace for `CssSyntaxError`', function (cb) {
 
     var stream = postcss([ doubler ])
-    var cssSyntaxError = new CssSyntaxError('message', 'sourceCode')
+    var cssSyntaxError = new CssSyntaxError('messageText', 'sourceCode')
     postcssStub.process.returns(Promise.reject(cssSyntaxError))
 
     stream.on('error', function (error) {
       assert.equal(error.showStack, false)
-      assert.equal(error.message, 'message' + '\n\nsourceCode\n')
+      assert.equal(error.message, 'messageText\n\nsourceCode\n')
+      assert.equal(error.source, 'sourceCode')
       cb()
     })
 
