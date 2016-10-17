@@ -75,6 +75,19 @@ gulp.task('css', function () {
 });
 ```
 
+## Report messages
+
+Report messages (warnings, etc.) registered by other PostCSS processors.
+
+
+```js
+return gulp.src('./src/*.css')
+    .pipe(postcss(processors))
+    .pipe(postcss.reporter(options))
+    .pipe(gulp.dest('./dest'));
+```
+Supports [postcss-reporter](https://www.npmjs.com/package/postcss-reporter) or [postcss-browser-reporter](https://www.npmjs.com/package/postcss-reporter) options.
+
 ## Source map support
 
 Source map is disabled by default, to extract map use together
