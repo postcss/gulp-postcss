@@ -90,18 +90,18 @@ module.exports = function (processors, options) {
 
 module.exports.reporter = function(options) {
   var isBrowser = options && options.selector || options.styles
-  var reporter = require(isBrowser ? 'postcss-browser-reporter' : 'postcss-reporter');
-  return new Stream.Transform({
-    objectMode: true,
-    transform: function(file, encoding, cb) {
-      var result = file.postcss
-      if (result) {
-        reporter(options)(result.root, result)
-        if (isBrowser) {
-          file.contents = new Buffer(result.css)
-        }
+  var reporter = require(isBrowser ? 'postcss-browser-reporter' : 'postcss-reporter')(options);
+  var stream = new Stream.Transform({ objectMode: true })
+
+  stream._transform = function (file, encoding, cb) {
+    var result = file.postcss
+    if (result) {
+      reporter(result.root, result)
+      if (isBrowser) {
+        file.contents = new Buffer(result.css)
       }
-      cb(null, file)
     }
-  })
+    cb(null, file)
+  }
+  return stream
 }

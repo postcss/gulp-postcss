@@ -79,7 +79,6 @@ gulp.task('css', function () {
 
 Report messages (warnings, etc.) registered by other PostCSS processors.
 
-
 ```js
 return gulp.src('./src/*.css')
     .pipe(postcss(processors))
