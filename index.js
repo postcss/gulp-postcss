@@ -50,7 +50,6 @@ module.exports = function (processors, options) {
 
     function handleResult (result) {
       var map
-      var warnings = result.warnings().join('\n')
 
       file.contents = new Buffer(result.css)
 
@@ -64,9 +63,7 @@ module.exports = function (processors, options) {
         applySourceMap(file, map)
       }
 
-      if (warnings) {
-        gutil.log('gulp-postcss:', file.relative + '\n' + warnings)
-      }
+      file.postcss = result
 
       setImmediate(function () {
         cb(null, file)
@@ -88,5 +85,23 @@ module.exports = function (processors, options) {
 
   }
 
+  return stream
+}
+
+module.exports.reporter = function(options) {
+  var isBrowser = options && options.selector || options.styles
+  var reporter = require(isBrowser ? 'postcss-browser-reporter' : 'postcss-reporter')(options);
+  var stream = new Stream.Transform({ objectMode: true })
+
+  stream._transform = function (file, encoding, cb) {
+    var result = file.postcss
+    if (result) {
+      reporter(result.root, result)
+      if (isBrowser) {
+        file.contents = new Buffer(result.css)
+      }
+    }
+    cb(null, file)
+  }
   return stream
 }

@@ -7,6 +7,7 @@ var sourceMaps = require('gulp-sourcemaps')
 var postcss = require('./index')
 var proxyquire = require('proxyquire')
 var sinon = require('sinon')
+var path = require('path')
 
 it('should pass file when it isNull()', function (cb) {
   var stream = postcss([ doubler ])
@@ -114,7 +115,7 @@ it('should generate source maps', function (cb) {
 
   write.on('data', function (file) {
     assert.equal(file.sourceMap.mappings, 'AAAA,IAAI,aAAY,CAAZ,aAAY,CAAZ,aAAY,CAAZ,YAAY,EAAE')
-    assert(/sourceMappingURL=data:application\/json;base64/.test(file.contents.toString()))
+    assert(/sourceMappingURL=data:application\/json;(?:charset=\w+;)?base64/.test(file.contents.toString()))
     cb()
   })
 
@@ -255,27 +256,48 @@ describe('PostCSS Guidelines', function () {
 
   })
 
-
   it('should display `result.warnings()` content', function (cb) {
 
     var stream = postcss([ doubler ])
     var cssPath = __dirname + '/src/fixture.css'
+    var styles = {}
     function Warning (msg) {
-      this.toSting = function () {
-        return msg
+      this.toString = function () {
+        return this.text
       }
+      this.text = msg
+      this.plugin = "test-" + msg
     }
 
-    sandbox.stub(gutil, 'log')
-    postcssStub.process.returns(Promise.resolve({
-      css: ''
-    , warnings: function () {
-        return [new Warning('msg1'), new Warning('msg2')]
+    var result = {
+      root: {
+        source: {
+          input: {
+            file: cssPath
+          }
+        }
+      , walkRules: gutil.noop
+      , append: gutil.noop
+      , last: {
+          append: function(report) {
+            styles[report.prop] = report.value
+          }
+        }
       }
-    }))
+    , css: 'b {}'
+    , messages: [new Warning('msg1'), new Warning('msg2')]
+    , warnings: function () {
+        return this.messages
+      }
+    }
+    postcssStub.process.returns(Promise.resolve(result))
 
-    stream.on('data', function () {
-      gutil.log.calledWith('gulp-postcss:', '/src/fixture.css\nmsg1\nmsg2')
+    stream.pipe(postcss.reporter({
+      styles: styles
+    })).on('data', function (file) {
+      assert.ok(file.postcss === result)
+      assert.ok(String(file.contents) === 'b {}')
+      assert.ok(/\bsrc[\/\\]fixture.css\\00000amsg1 \[test-msg1\]\\00000amsg2 \[test-msg2\]"$/.test(styles.content))
       cb()
     })
 
