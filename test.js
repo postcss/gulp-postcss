@@ -76,6 +76,7 @@ it('should respond with error on stream files', function (cb) {
   stream.on('error', function (err) {
     assert.ok(err instanceof gutil.PluginError)
     assert.equal(err.plugin, 'gulp-postcss')
+    assert.equal(err.showStack, true)
     assert.equal(err.message, 'Streams are not supported!')
     assert.equal(err.fileName, path.resolve('testpath'))
     cb()

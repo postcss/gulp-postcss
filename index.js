@@ -74,25 +74,19 @@ module.exports = function (processors, options) {
     }
 
     function handleError (error) {
-      var errorOptions = { fileName: file.path }
-      if (error instanceof Object) {
+      var errorOptions = { fileName: file.path, showStack: true }
+      if (error.name === 'CssSyntaxError') {
         errorOptions.error = error
-        if (error.name === 'CssSyntaxError') {
-          var input = error.input || {};
-          errorOptions.fileName = error.file || input.file || file.path
-          errorOptions.lineNumber = error.line || input.line
-          errorOptions.showStack = false
-          errorOptions.showProperties = false
-          error = error.message + '\n\n' + error.showSourceCode() + '\n'
-        } else {
-          errorOptions.showStack = true
-          error = error.message || error
-        }
+        errorOptions.fileName = error.file || file.path
+        errorOptions.lineNumber = error.line
+        errorOptions.showProperties = false
+        errorOptions.showStack = false
+        error = error.message + '\n\n' + error.showSourceCode() + '\n'
       }
       // Prevent stream’s unhandled exception from
       // being suppressed by Promise
       setImmediate(function () {
-        cb(new gutil.PluginError('gulp-postcss', String(error), errorOptions))
+        cb(new gutil.PluginError('gulp-postcss', error, errorOptions))
       })
     }
 
