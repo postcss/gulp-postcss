@@ -256,6 +256,39 @@ describe('PostCSS Guidelines', function () {
 
   })
 
+  it('should not display `result.warnings()` content', function (cb) {
+
+    var stream = postcss([ doubler ], {
+      warn: false
+    })
+    var cssPath = __dirname + '/src/fixture.css'
+    function Warning (msg) {
+      this.toString = function () {
+        return msg
+      }
+    }
+
+    sandbox.stub(gutil, 'log')
+    postcssStub.process.returns(Promise.resolve({
+      css: ''
+    , warnings: function () {
+        return [new Warning('msg1'), new Warning('msg2')]
+      }
+    }))
+
+    stream.on('data', function () {
+      assert(gutil.log.neverCalledWith('gulp-postcss:', 'src' +  path.sep + 'fixture.css\nmsg1\nmsg2'))
+      cb()
+    })
+
+    stream.write(new gutil.File({
+      contents: new Buffer('a {}')
+    , path: cssPath
+    }))
+
+    stream.end()
+
+  })
 
   it('should display `result.warnings()` content', function (cb) {
 

@@ -23,9 +23,11 @@ module.exports = function (processors, options) {
       return handleError('Streams are not supported!')
     }
 
-    // Source map is disabled by default
-    var opts = { map: false }
-    var attr
+    var opts = {
+      // Source map is disabled by default
+      map: false,
+      warn: true,
+    }
 
     // Extend default options
     if (options) {
@@ -50,7 +52,9 @@ module.exports = function (processors, options) {
 
     function handleResult (result) {
       var map
-      var warnings = result.warnings().join('\n')
+      var warnings = opts.warn
+
+      delete opts.warn
 
       file.contents = new Buffer(result.css)
 
@@ -64,8 +68,11 @@ module.exports = function (processors, options) {
         applySourceMap(file, map)
       }
 
-      if (warnings) {
-        gutil.log('gulp-postcss:', file.relative + '\n' + warnings)
+      if(warnings) {
+        warnings = result.warnings().join('\n')
+        if (warnings) {
+          gutil.log('gulp-postcss:', file.relative + '\n' + warnings)
+        }
       }
 
       setImmediate(function () {
