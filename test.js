@@ -295,7 +295,7 @@ describe('PostCSS Guidelines', function () {
     var stream = postcss([ doubler ])
     var cssPath = __dirname + '/src/fixture.css'
     function Warning (msg) {
-      this.toSting = function () {
+      this.toString = function () {
         return msg
       }
     }
@@ -309,7 +309,7 @@ describe('PostCSS Guidelines', function () {
     }))
 
     stream.on('data', function () {
-      gutil.log.calledWith('gulp-postcss:', '/src/fixture.css\nmsg1\nmsg2')
+      assert(gutil.log.calledWith('gulp-postcss:', 'src' +  path.sep + 'fixture.css\nmsg1\nmsg2'))
       cb()
     })
 
