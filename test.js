@@ -54,8 +54,12 @@ it('should correctly wrap postcss errors', function (cb) {
   stream.on('error', function (err) {
     assert.ok(err instanceof gutil.PluginError)
     assert.equal(err.plugin, 'gulp-postcss')
+    assert.equal(err.column, 1)
     assert.equal(err.lineNumber, 1)
+    assert.equal(err.name, 'CssSyntaxError')
+    assert.equal(err.reason, 'Unclosed block')
     assert.equal(err.showStack, false)
+    assert.equal(err.source, 'a {')
     assert.equal(err.fileName, path.resolve('testpath'))
     cb()
   })
