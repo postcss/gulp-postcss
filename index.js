@@ -68,6 +68,8 @@ module.exports = function (processors, options) {
         gutil.log('gulp-postcss:', file.relative + '\n' + warnings)
       }
 
+      file.postcss = result
+
       setImmediate(function () {
         cb(null, file)
       })
