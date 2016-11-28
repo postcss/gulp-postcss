@@ -3,13 +3,10 @@ var postcss = require('postcss')
 var applySourceMap = require('vinyl-sourcemaps-apply')
 var gutil = require('gulp-util')
 var path = require('path')
+var pluginsrc = require('postcss-load-plugins')()
 
 
 module.exports = function (processors, options) {
-
-  if (!Array.isArray(processors)) {
-    throw new gutil.PluginError('gulp-postcss', 'Please provide array of postcss processors!')
-  }
 
   var stream = new Stream.Transform({ objectMode: true })
 
@@ -44,9 +41,21 @@ module.exports = function (processors, options) {
       opts.map = { annotation: false }
     }
 
-    postcss(processors)
-      .process(file.contents, opts)
-      .then(handleResult, handleError)
+    if(Array.isArray(processors)) {
+        postcss(processors)
+            .process(file.contents, opts)
+            .then(handleResult, handleError)
+    } else {
+        pluginsrc.then( function(plugins) {
+            if ( typeof plugins !== "undefined" ) {
+                postcss(plugins)
+                    .process(file.contents, opts)
+                    .then(handleResult, handleError)
+            } else {
+                throw new gutil.PluginError('gulp-postcss', 'Please provide array of postcss processors!')
+            }
+        })
+    }
 
     function handleResult (result) {
       var map
