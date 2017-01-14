@@ -20,7 +20,7 @@ module.exports = withConfigLoader(function (loadConfig) {
       return handleError('Streams are not supported!')
     }
 
-    // Protect `from` and `map` if using gulp-sourcemap
+    // Protect `from` and `map` if using gulp-sourcemaps
     var isProtected = file.sourceMap
       ? { from: true, map: true }
       : {}
@@ -28,7 +28,7 @@ module.exports = withConfigLoader(function (loadConfig) {
     var options = {
       from: file.path
     , to: file.path
-      // Generate a separate source map for gulp-sourcemap
+      // Generate a separate source map for gulp-sourcemaps
     , map: file.sourceMap ? { annotation: false } : false
     }
 
@@ -47,7 +47,7 @@ module.exports = withConfigLoader(function (loadConfig) {
             gutil.log(
               'gulp-postcss:',
               file.relative + '\nCannot override ' + opt +
-              ' option, because it is required by gulp-sourcemap'
+              ' option, because it is required by gulp-sourcemaps'
             )
           }
         }

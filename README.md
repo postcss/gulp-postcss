@@ -1,7 +1,7 @@
 # gulp-postcss [![Build Status](https://api.travis-ci.org/postcss/gulp-postcss.png)](https://travis-ci.org/postcss/gulp-postcss)
 
 [PostCSS](https://github.com/postcss/postcss) gulp plugin to pipe CSS through
-several processors, but parse CSS only once.
+several plugins, but parse CSS only once.
 
 ## Install
 
@@ -11,6 +11,23 @@ Install required [postcss plugins](https://www.npmjs.com/browse/keyword/postcss-
 
 ## Basic usage
 
+The configuration is loaded automatically from `postcss.config.js`
+as [described here](https://www.npmjs.com/package/postcss-load-config),
+so you don't have to specify any options.
+
+```js
+var postcss = require('gulp-postcss');
+var gulp = require('gulp');
+
+gulp.task('css', function () {
+    return gulp.src('./src/*.css')
+        .pipe(postcss())
+        .pipe(gulp.dest('./dest'));
+});
+```
+
+## Passing plugins directly
+
 ```js
 var postcss = require('gulp-postcss');
 var gulp = require('gulp');
@@ -18,12 +35,12 @@ var autoprefixer = require('autoprefixer');
 var cssnano = require('cssnano');
 
 gulp.task('css', function () {
-    var processors = [
+    var plugins = [
         autoprefixer({browsers: ['last 1 version']}),
-        cssnano(),
+        cssnano()
     ];
     return gulp.src('./src/*.css')
-        .pipe(postcss(processors))
+        .pipe(postcss(plugins))
         .pipe(gulp.dest('./dest'));
 });
 ```
@@ -41,9 +58,9 @@ var nested = require('postcss-nested');
 var scss = require('postcss-scss');
 
 gulp.task('default', function () {
-    var processors = [nested];
+    var plugins = [nested];
     return gulp.src('in.css')
-        .pipe(postcss(processors, {syntax: scss}))
+        .pipe(postcss(plugins, {syntax: scss}))
         .pipe(gulp.dest('out'));
 });
 ```
@@ -65,12 +82,12 @@ var opacity = function (css, opts) {
 };
 
 gulp.task('css', function () {
-    var processors = [
+    var plugins = [
         cssnext({browsers: ['last 1 version']}),
-        opacity,
+        opacity
     ];
     return gulp.src('./src/*.css')
-        .pipe(postcss(processors))
+        .pipe(postcss(plugins))
         .pipe(gulp.dest('./dest'));
 });
 ```
@@ -83,7 +100,7 @@ with [gulp-sourcemaps](https://github.com/floridoo/gulp-sourcemaps).
 ```js
 return gulp.src('./src/*.css')
     .pipe(sourcemaps.init())
-    .pipe(postcss(processors))
+    .pipe(postcss(plugins))
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('./dest'));
 ```
@@ -124,7 +141,7 @@ return gulp.src('./src/*.css')
 
 * 5.1.4
   * Simplified error handling
-  * Simplified postcss execution with object processors
+  * Simplified postcss execution with object plugins
 
 * 5.1.3 Updated travis banner
 
@@ -139,7 +156,7 @@ return gulp.src('./src/*.css')
   * Display `result.warnings()` content
 
 * 5.0.1
-  * Fix to support object processors
+  * Fix to support object plugins
 
 * 5.0.0
   * Use async API
@@ -173,7 +190,7 @@ return gulp.src('./src/*.css')
   * Improved README
 
 * 1.0.1
-  * Don't add source map comment if used with gulp-sourcemap
+  * Don't add source map comment if used with gulp-sourcemaps
 
 * 1.0.0
   * Initial release

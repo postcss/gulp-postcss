@@ -280,7 +280,7 @@ describe('PostCSS Guidelines', function () {
 
   })
 
-  it('should not override `from` and `map` if using source maps', function (cb) {
+  it('should not override `from` and `map` if using gulp-sourcemaps', function (cb) {
     var stream = postcss([ doubler ], { from: 'overriden', map: 'overriden' })
     var cssPath = __dirname + '/fixture.css'
     postcssStub.process.returns(Promise.resolve({
@@ -305,8 +305,8 @@ describe('PostCSS Guidelines', function () {
       assert.deepEqual(postcssStub.process.getCall(0).args[1].map, { annotation: false })
       var firstMessage = gutil.log.getCall(0).args[1]
       var secondMessage = gutil.log.getCall(1).args[1]
-      assert(firstMessage, '/fixture.css\nCannot override from option, because it is required by gulp-sourcemap')
-      assert(secondMessage, '/fixture.css\nCannot override map option, because it is required by gulp-sourcemap')
+      assert(firstMessage, '/fixture.css\nCannot override from option, because it is required by gulp-sourcemaps')
+      assert(secondMessage, '/fixture.css\nCannot override map option, because it is required by gulp-sourcemaps')
       cb()
     })
 
