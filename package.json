@@ -23,14 +23,15 @@
   },
   "homepage": "https://github.com/postcss/gulp-postcss",
   "dependencies": {
-    "gulp-util": "^3.0.7",
-    "postcss": "^5.2.0",
-    "vinyl-sourcemaps-apply": "^0.2.0"
+    "gulp-util": "^3.0.8",
+    "postcss": "^5.2.10",
+    "postcss-load-config": "^1.1.0",
+    "vinyl-sourcemaps-apply": "^0.2.1"
   },
   "devDependencies": {
-    "es6-promise": "^3.0.2",
-    "gulp-sourcemaps": "^1.5.1",
-    "mocha": "^2.2.5",
+    "es6-promise": "^3.3.1",
+    "gulp-sourcemaps": "^1.11.0",
+    "mocha": "^3.2.0",
     "proxyquire": "^1.7.4",
     "sinon": "^1.17.3"
   }

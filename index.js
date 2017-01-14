@@ -3,13 +3,10 @@ var postcss = require('postcss')
 var applySourceMap = require('vinyl-sourcemaps-apply')
 var gutil = require('gulp-util')
 var path = require('path')
+var postcssLoadConfig = require('postcss-load-config')
 
 
-module.exports = function (processors, options) {
-
-  if (!Array.isArray(processors)) {
-    throw new gutil.PluginError('gulp-postcss', 'Please provide array of postcss processors!')
-  }
+module.exports = withConfigLoader(function (loadConfig) {
 
   var stream = new Stream.Transform({ objectMode: true })
 
@@ -23,29 +20,40 @@ module.exports = function (processors, options) {
       return handleError('Streams are not supported!')
     }
 
-    // Source map is disabled by default
-    var opts = { map: false }
-    var attr
+    // Protect `from` and `map` if using gulp-sourcemap
+    var isProtected = file.sourceMap
+      ? { from: true, map: true }
+      : {}
 
-    // Extend default options
-    if (options) {
-      for (attr in options) {
-        if (options.hasOwnProperty(attr)) {
-          opts[attr] = options[attr]
+    var options = {
+      from: file.path
+    , to: file.path
+      // Generate a separate source map for gulp-sourcemap
+    , map: file.sourceMap ? { annotation: false } : false
+    }
+
+    loadConfig({
+      from: options.from
+    , to: options.to
+    , map: options.map
+    })
+      .then(function (config) {
+        var configOpts = config.options || {}
+        // Extend the default options if not protected
+        for (var opt in configOpts) {
+          if (configOpts.hasOwnProperty(opt) && !isProtected[opt]) {
+            options[opt] = configOpts[opt]
+          } else {
+            gutil.log(
+              'gulp-postcss:',
+              file.relative + '\nCannot override ' + opt +
+              ' option, because it is required by gulp-sourcemap'
+            )
+          }
         }
-      }
-    }
-
-    opts.from = file.path
-    opts.to = opts.to || file.path
-
-    // Generate separate source map for gulp-sourcemap
-    if (file.sourceMap) {
-      opts.map = { annotation: false }
-    }
-
-    postcss(processors)
-      .process(file.contents, opts)
+        return postcss(config.plugins || [])
+          .process(file.contents, options)
+      })
       .then(handleResult, handleError)
 
     function handleResult (result) {
@@ -89,4 +97,25 @@ module.exports = function (processors, options) {
   }
 
   return stream
+})
+
+
+function withConfigLoader(cb) {
+  return function (plugins, options) {
+    if (typeof plugins === 'undefined') {
+      return cb(postcssLoadConfig)
+    } else if (Array.isArray(plugins)) {
+      return cb(function () {
+        return Promise.resolve({
+          plugins: plugins
+        , options: options
+        })
+      })
+    } else {
+      throw new gutil.PluginError(
+        'gulp-postcss',
+        'Please provide array of postcss processors!'
+      )
+    }
+  }
 }
