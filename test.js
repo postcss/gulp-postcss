@@ -168,8 +168,8 @@ describe('PostCSS Guidelines', function () {
       postcssStub.use(plugins)
       return postcssStub
     }
-  , 'postcss-load-config': function (ctx) {
-      return postcssLoadConfigStub(ctx)
+  , 'postcss-load-config': function (ctx, configPath) {
+      return postcssLoadConfigStub(ctx, configPath)
     }
   , 'vinyl-sourcemaps-apply': function () {
       return {}
@@ -301,6 +301,67 @@ describe('PostCSS Guidelines', function () {
 
     stream.end(file)
 
+  })
+
+  it('should point the config location to file directory', function (cb) {
+    var cssPath = __dirname + '/fixture.css'
+    var stream = postcss()
+    postcssLoadConfigStub.returns(Promise.resolve({ plugins: [] }))
+    postcssStub.process.returns(Promise.resolve({
+      css: ''
+    , warnings: function () {
+        return []
+      }
+    }))
+    stream.on('data', function () {
+      assert.deepEqual(postcssLoadConfigStub.getCall(0).args[1], __dirname)
+      cb()
+    })
+    stream.end(new gutil.File({
+      contents: new Buffer('a {}')
+    , path: cssPath
+    }))
+  })
+
+  it('should set the config location from option', function (cb) {
+    var cssPath = __dirname + '/fixture.css'
+    var stream = postcss({ config: '/absolute/path' })
+    postcssLoadConfigStub.returns(Promise.resolve({ plugins: [] }))
+    postcssStub.process.returns(Promise.resolve({
+      css: ''
+    , warnings: function () {
+        return []
+      }
+    }))
+    stream.on('data', function () {
+      assert.deepEqual(postcssLoadConfigStub.getCall(0).args[1], '/absolute/path')
+      cb()
+    })
+    stream.end(new gutil.File({
+      contents: new Buffer('a {}')
+    , path: cssPath
+    }))
+  })
+
+  it('should set the config location from option relative to the base dir', function (cb) {
+    var cssPath = __dirname + '/src/fixture.css'
+    var stream = postcss({ config: './relative/path' })
+    postcssLoadConfigStub.returns(Promise.resolve({ plugins: [] }))
+    postcssStub.process.returns(Promise.resolve({
+      css: ''
+    , warnings: function () {
+        return []
+      }
+    }))
+    stream.on('data', function () {
+      assert.deepEqual(postcssLoadConfigStub.getCall(0).args[1], __dirname + '/relative/path')
+      cb()
+    })
+    stream.end(new gutil.File({
+      contents: new Buffer('a {}')
+    , path: cssPath
+    , base: __dirname
+    }))
   })
 
   it('should not override `from` and `map` if using gulp-sourcemaps', function (cb) {

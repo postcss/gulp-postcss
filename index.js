@@ -110,11 +110,24 @@ function withConfigLoader(cb) {
       })
     } else {
       var postcssLoadConfig = require('postcss-load-config')
+      var contextOptions = plugins || {}
       return cb(function(file) {
-        return postcssLoadConfig({
-          file: file
-        , options: plugins
-        })
+        var configPath
+        if (contextOptions.config) {
+          if (path.isAbsolute(contextOptions.config)) {
+            configPath = contextOptions.config
+          } else {
+            configPath = path.join(file.base, contextOptions.config)
+          }
+        } else {
+          configPath = file.dirname
+        }
+        return postcssLoadConfig(
+          { file: file
+          , options: contextOptions
+          },
+          configPath
+        )
       })
     }
   }
