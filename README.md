@@ -49,18 +49,18 @@ gulp.task('css', function () {
 
 The second optional argument to gulp-postcss is passed to PostCSS.
 
-This, for instance, may be used to enable custom syntax:
+This, for instance, may be used to enable custom parser:
 
 ```js
 var gulp = require('gulp');
 var postcss = require('gulp-postcss');
 var nested = require('postcss-nested');
-var scss = require('postcss-scss');
+var sugarss = require('sugarss');
 
 gulp.task('default', function () {
     var plugins = [nested];
-    return gulp.src('in.css')
-        .pipe(postcss(plugins, {syntax: scss}))
+    return gulp.src('in.sss')
+        .pipe(postcss(plugins, { parser: sugarss }))
         .pipe(gulp.dest('out'));
 });
 ```
@@ -103,6 +103,65 @@ return gulp.src('./src/*.css')
     .pipe(postcss(plugins))
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('./dest'));
+```
+
+## Advanced usage
+
+If you want to configure per file basis, you can pass a callback that
+receives [vinyl file object](https://github.com/gulpjs/vinyl) and returns
+`{ plugins: plugins, options: options }`. For example, when you need to
+parse different extensions differntly:
+
+```js
+var gulp = require('gulp');
+var postcss = require('gulp-postcss');
+
+gulp.task('css', function () {
+    function callback(file) {
+        return {
+            plugins: [
+                require('postcss-import')({ root: file.dirname }),
+                require('postcss-modules')
+            ],
+            options: {
+                parser: file.extname === '.sss' ? require('sugarss') : false
+            }
+        }
+    }
+    return gulp.src('./src/*.css')
+        .pipe(postcss(callback))
+        .pipe(gulp.dest('./dest'));
+});
+```
+
+The same result may be achieved with
+[`postcss-load-config`](https://www.npmjs.com/package/postcss-load-config),
+because it receives `ctx` with the context options and the vinyl file.
+
+```js
+var gulp = require('gulp');
+var postcss = require('gulp-postcss');
+
+gulp.task('css', function () {
+    var contextOptions = { modules: true };
+    return gulp.src('./src/*.css')
+        .pipe(postcss(contextOptions))
+        .pipe(gulp.dest('./dest'));
+});
+```
+
+```js
+module.exports = function (ctx) {
+    var file = ctx.file;
+    var options = ctx.options;
+    return {
+        parser: file.extname === '.sss' ? : 'sugarss' : false,
+        plugins: {
+           'postcss-import': { root: file.dirname }
+           'postcss-modules': options.modules ? {} : false
+        }
+    }
+})
 ```
 
 ## Changelog

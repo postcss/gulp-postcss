@@ -3,7 +3,6 @@ var postcss = require('postcss')
 var applySourceMap = require('vinyl-sourcemaps-apply')
 var gutil = require('gulp-util')
 var path = require('path')
-var postcssLoadConfig = require('postcss-load-config')
 
 
 module.exports = withConfigLoader(function (loadConfig) {
@@ -32,11 +31,7 @@ module.exports = withConfigLoader(function (loadConfig) {
     , map: file.sourceMap ? { annotation: false } : false
     }
 
-    loadConfig({
-      from: options.from
-    , to: options.to
-    , map: options.map
-    })
+    loadConfig(file)
       .then(function (config) {
         var configOpts = config.options || {}
         // Extend the default options if not protected
@@ -102,20 +97,25 @@ module.exports = withConfigLoader(function (loadConfig) {
 
 function withConfigLoader(cb) {
   return function (plugins, options) {
-    if (typeof plugins === 'undefined') {
-      return cb(postcssLoadConfig)
-    } else if (Array.isArray(plugins)) {
+    if (Array.isArray(plugins)) {
       return cb(function () {
         return Promise.resolve({
           plugins: plugins
         , options: options
         })
       })
+    } else if (typeof plugins === 'function') {
+      return cb(function (file) {
+        return Promise.resolve(plugins(file))
+      })
     } else {
-      throw new gutil.PluginError(
-        'gulp-postcss',
-        'Please provide array of postcss processors!'
-      )
+      var postcssLoadConfig = require('postcss-load-config')
+      return cb(function(file) {
+        return postcssLoadConfig({
+          file: file
+        , options: plugins
+        })
+      })
     }
   }
 }

@@ -92,13 +92,6 @@ it('should respond with error on stream files', function (cb) {
 
 })
 
-
-it('should throw error if plugins are not array', function () {
-  assert.throws( function () { postcss('') }, gutil.PluginError )
-  assert.throws( function () { postcss({}) }, gutil.PluginError )
-})
-
-
 it('should generate source maps', function (cb) {
 
   var init = sourceMaps.init()
@@ -175,8 +168,8 @@ describe('PostCSS Guidelines', function () {
       postcssStub.use(plugins)
       return postcssStub
     }
-  , 'postcss-load-config': function (args) {
-      return postcssLoadConfigStub(args)
+  , 'postcss-load-config': function (ctx) {
+      return postcssLoadConfigStub(ctx)
     }
   , 'vinyl-sourcemaps-apply': function () {
       return {}
@@ -242,10 +235,46 @@ describe('PostCSS Guidelines', function () {
 
   })
 
+  it('should take plugins and options from callback', function (cb) {
+
+    var cssPath = __dirname + '/fixture.css'
+    var file = new gutil.File({
+      contents: new Buffer('a {}')
+    , path: cssPath
+    })
+    var plugins = [ doubler ]
+    var callback = sandbox.stub().returns({
+      plugins: plugins
+    , options: { to: 'overriden' }
+    })
+    var stream = postcss(callback)
+
+    postcssStub.process.returns(Promise.resolve({
+      css: ''
+    , warnings: function () {
+        return []
+      }
+    }))
+
+    stream.on('data', function () {
+      assert.equal(callback.getCall(0).args[0], file)
+      assert.equal(postcssStub.use.getCall(0).args[0], plugins)
+      assert.equal(postcssStub.process.getCall(0).args[1].to, 'overriden')
+      cb()
+    })
+
+    stream.end(file)
+
+  })
+
   it('should take plugins and options from postcss-load-config', function (cb) {
 
     var cssPath = __dirname + '/fixture.css'
-    var stream = postcss()
+    var file = new gutil.File({
+      contents: new Buffer('a {}')
+    , path: cssPath
+    })
+    var stream = postcss({ to: 'initial' })
     var plugins = [ doubler ]
 
     postcssLoadConfigStub.returns(Promise.resolve({
@@ -262,21 +291,15 @@ describe('PostCSS Guidelines', function () {
 
     stream.on('data', function () {
       assert.deepEqual(postcssLoadConfigStub.getCall(0).args[0], {
-        from: cssPath
-      , to: cssPath
-      , map: false
+        file: file
+      , options: { to: 'initial' }
       })
       assert.equal(postcssStub.use.getCall(0).args[0], plugins)
       assert.equal(postcssStub.process.getCall(0).args[1].to, 'overriden')
       cb()
     })
 
-    stream.write(new gutil.File({
-      contents: new Buffer('a {}')
-    , path: cssPath
-    }))
-
-    stream.end()
+    stream.end(file)
 
   })
 
