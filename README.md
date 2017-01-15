@@ -107,8 +107,8 @@ return gulp.src('./src/*.css')
 
 ## Advanced usage
 
-If you want to configure per file basis, you can pass a callback that
-receives [vinyl file object](https://github.com/gulpjs/vinyl) and returns
+If you want to configure postcss on per-file-basis, you can pass a callback
+that receives [vinyl file object](https://github.com/gulpjs/vinyl) and returns
 `{ plugins: plugins, options: options }`. For example, when you need to
 parse different extensions differntly:
 
@@ -165,6 +165,11 @@ module.exports = function (ctx) {
 ```
 
 ## Changelog
+
+* 6.3.0
+  * Integrated with postcss-load-config
+  * Added a callback to configure postcss on per-file-basis
+  * Dropped node 0.10 support
 
 * 6.2.0
   * Fix syntax error message for PostCSS 5.2 compatibility
