@@ -1,6 +1,5 @@
 /* global it, afterEach, beforeEach, describe, Promise */
 
-require('es6-promise').polyfill()
 var assert = require('assert')
 var gutil = require('gulp-util')
 var sourceMaps = require('gulp-sourcemaps')
