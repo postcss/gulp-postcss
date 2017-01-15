@@ -1,6 +1,5 @@
 /* global it, afterEach, beforeEach, describe, Promise */
 
-require('es6-promise').polyfill()
 var assert = require('assert')
 var gutil = require('gulp-util')
 var sourceMaps = require('gulp-sourcemaps')
@@ -92,15 +91,6 @@ it('should respond with error on stream files', function (cb) {
 
 })
 
-
-it('should throw error if processors are not provided', function (cb) {
-  assert.throws( function () { postcss() }, gutil.PluginError )
-  assert.throws( function () { postcss('') }, gutil.PluginError )
-  assert.throws( function () { postcss({}) }, gutil.PluginError )
-  cb()
-})
-
-
 it('should generate source maps', function (cb) {
 
   var init = sourceMaps.init()
@@ -171,13 +161,22 @@ describe('PostCSS Guidelines', function () {
     use: function () {}
   , process: function () {}
   }
+  var postcssLoadConfigStub
   var postcss = proxyquire('./index', {
-    postcss: function () {
+    postcss: function (plugins) {
+      postcssStub.use(plugins)
       return postcssStub
+    }
+  , 'postcss-load-config': function (ctx, configPath) {
+      return postcssLoadConfigStub(ctx, configPath)
+    }
+  , 'vinyl-sourcemaps-apply': function () {
+      return {}
     }
   })
 
   beforeEach(function () {
+    postcssLoadConfigStub = sandbox.stub()
     sandbox.stub(postcssStub, 'use')
     sandbox.stub(postcssStub, 'process')
   })
@@ -185,7 +184,6 @@ describe('PostCSS Guidelines', function () {
   afterEach(function () {
     sandbox.restore()
   })
-
 
   it('should set `from` and `to` processing options to `file.path`', function (cb) {
 
@@ -234,6 +232,173 @@ describe('PostCSS Guidelines', function () {
 
     stream.end()
 
+  })
+
+  it('should take plugins and options from callback', function (cb) {
+
+    var cssPath = __dirname + '/fixture.css'
+    var file = new gutil.File({
+      contents: new Buffer('a {}')
+    , path: cssPath
+    })
+    var plugins = [ doubler ]
+    var callback = sandbox.stub().returns({
+      plugins: plugins
+    , options: { to: 'overriden' }
+    })
+    var stream = postcss(callback)
+
+    postcssStub.process.returns(Promise.resolve({
+      css: ''
+    , warnings: function () {
+        return []
+      }
+    }))
+
+    stream.on('data', function () {
+      assert.equal(callback.getCall(0).args[0], file)
+      assert.equal(postcssStub.use.getCall(0).args[0], plugins)
+      assert.equal(postcssStub.process.getCall(0).args[1].to, 'overriden')
+      cb()
+    })
+
+    stream.end(file)
+
+  })
+
+  it('should take plugins and options from postcss-load-config', function (cb) {
+
+    var cssPath = __dirname + '/fixture.css'
+    var file = new gutil.File({
+      contents: new Buffer('a {}')
+    , path: cssPath
+    })
+    var stream = postcss({ to: 'initial' })
+    var plugins = [ doubler ]
+
+    postcssLoadConfigStub.returns(Promise.resolve({
+      plugins: plugins
+    , options: { to: 'overriden' }
+    }))
+
+    postcssStub.process.returns(Promise.resolve({
+      css: ''
+    , warnings: function () {
+        return []
+      }
+    }))
+
+    stream.on('data', function () {
+      assert.deepEqual(postcssLoadConfigStub.getCall(0).args[0], {
+        file: file
+      , options: { to: 'initial' }
+      })
+      assert.equal(postcssStub.use.getCall(0).args[0], plugins)
+      assert.equal(postcssStub.process.getCall(0).args[1].to, 'overriden')
+      cb()
+    })
+
+    stream.end(file)
+
+  })
+
+  it('should point the config location to file directory', function (cb) {
+    var cssPath = __dirname + '/fixture.css'
+    var stream = postcss()
+    postcssLoadConfigStub.returns(Promise.resolve({ plugins: [] }))
+    postcssStub.process.returns(Promise.resolve({
+      css: ''
+    , warnings: function () {
+        return []
+      }
+    }))
+    stream.on('data', function () {
+      assert.deepEqual(postcssLoadConfigStub.getCall(0).args[1], __dirname)
+      cb()
+    })
+    stream.end(new gutil.File({
+      contents: new Buffer('a {}')
+    , path: cssPath
+    }))
+  })
+
+  it('should set the config location from option', function (cb) {
+    var cssPath = __dirname + '/fixture.css'
+    var stream = postcss({ config: '/absolute/path' })
+    postcssLoadConfigStub.returns(Promise.resolve({ plugins: [] }))
+    postcssStub.process.returns(Promise.resolve({
+      css: ''
+    , warnings: function () {
+        return []
+      }
+    }))
+    stream.on('data', function () {
+      assert.deepEqual(postcssLoadConfigStub.getCall(0).args[1], '/absolute/path')
+      cb()
+    })
+    stream.end(new gutil.File({
+      contents: new Buffer('a {}')
+    , path: cssPath
+    }))
+  })
+
+  it('should set the config location from option relative to the base dir', function (cb) {
+    var cssPath = __dirname + '/src/fixture.css'
+    var stream = postcss({ config: './relative/path' })
+    postcssLoadConfigStub.returns(Promise.resolve({ plugins: [] }))
+    postcssStub.process.returns(Promise.resolve({
+      css: ''
+    , warnings: function () {
+        return []
+      }
+    }))
+    stream.on('data', function () {
+      assert.deepEqual(postcssLoadConfigStub.getCall(0).args[1], __dirname + '/relative/path')
+      cb()
+    })
+    stream.end(new gutil.File({
+      contents: new Buffer('a {}')
+    , path: cssPath
+    , base: __dirname
+    }))
+  })
+
+  it('should not override `from` and `map` if using gulp-sourcemaps', function (cb) {
+    var stream = postcss([ doubler ], { from: 'overriden', map: 'overriden' })
+    var cssPath = __dirname + '/fixture.css'
+    postcssStub.process.returns(Promise.resolve({
+      css: ''
+    , warnings: function () {
+        return []
+      }
+    , map: {
+        toJSON: function () {
+          return {
+            sources: [],
+            file: ''
+          }
+        }
+      }
+    }))
+
+    sandbox.stub(gutil, 'log')
+
+    stream.on('data', function () {
+      assert.deepEqual(postcssStub.process.getCall(0).args[1].from, cssPath)
+      assert.deepEqual(postcssStub.process.getCall(0).args[1].map, { annotation: false })
+      var firstMessage = gutil.log.getCall(0).args[1]
+      var secondMessage = gutil.log.getCall(1).args[1]
+      assert(firstMessage, '/fixture.css\nCannot override from option, because it is required by gulp-sourcemaps')
+      assert(secondMessage, '/fixture.css\nCannot override map option, because it is required by gulp-sourcemaps')
+      cb()
+    })
+
+    var file = new gutil.File({
+      contents: new Buffer('a {}')
+    , path: cssPath
+    })
+    file.sourceMap = {}
+    stream.end(file)
   })
 
   it('should not output js stack trace for `CssSyntaxError`', function (cb) {
