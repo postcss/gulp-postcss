@@ -166,6 +166,9 @@ module.exports = function (ctx) {
 
 ## Changelog
 
+* 6.4.0
+  * Add more details to `PluginError` object
+
 * 6.3.0
   * Integrated with postcss-load-config
   * Added a callback to configure postcss on per-file-basis
