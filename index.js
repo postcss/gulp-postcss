@@ -79,8 +79,12 @@ module.exports = withConfigLoader(function (loadConfig) {
     function handleError (error) {
       var errorOptions = { fileName: file.path, showStack: true }
       if (error.name === 'CssSyntaxError') {
-        error = error.message + '\n\n' + error.showSourceCode() + '\n'
+        errorOptions.error = error
+        errorOptions.fileName = error.file || file.path
+        errorOptions.lineNumber = error.line
+        errorOptions.showProperties = false
         errorOptions.showStack = false
+        error = error.message + '\n\n' + error.showSourceCode() + '\n'
       }
       // Prevent stream’s unhandled exception from
       // being suppressed by Promise
