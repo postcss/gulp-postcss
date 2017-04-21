@@ -366,7 +366,7 @@ describe('PostCSS Guidelines', function () {
       }
     }))
     stream.on('data', function () {
-      assert.deepEqual(postcssLoadConfigStub.getCall(0).args[1], __dirname + '/relative/path')
+      assert.deepEqual(postcssLoadConfigStub.getCall(0).args[1], path.join(__dirname, 'relative/path'))
       cb()
     })
     stream.end(new gutil.File({
