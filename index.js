@@ -6,7 +6,7 @@ var path = require('path')
 var cheerio = require('cheerio')
 
 
-module.exports = function (processors, options) {
+module.exports = function (processors, options, htmlOpts) {
 
   if (!Array.isArray(processors)) {
     throw new gutil.PluginError('gulp-postcss', 'Please provide array of postcss processors!')
@@ -23,7 +23,8 @@ module.exports = function (processors, options) {
     // Source map is disabled by default
     var opts = { map: false }
     var attr
-
+    htmlOpts = htmlOpts || {}
+    
     // Extend default options
     if (options) {
       for (attr in options) {
@@ -41,7 +42,7 @@ module.exports = function (processors, options) {
       opts.map = { annotation: false }
     }
 
-    var $ = cheerio.load(file.contents)
+    var $ = cheerio.load(file.contents, htmlOpts)
     $('style').contents().each(function(index, style) {
       postcss(processors)
         .process(style.data, opts)
