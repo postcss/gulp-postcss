@@ -4,6 +4,7 @@
   "description": "PostCSS gulp plugin",
   "main": "index.js",
   "scripts": {
+    "pretest": "node-version-gte-4 && eslint index.js || echo \"ESLint not supported\"",
     "test": "mocha test.js"
   },
   "repository": {
@@ -29,10 +30,12 @@
     "vinyl-sourcemaps-apply": "^0.2.1"
   },
   "devDependencies": {
-    "gulp-sourcemaps": "^1.11.0",
-    "mocha": "^3.2.0",
-    "proxyquire": "^1.7.4",
-    "sinon": "^1.17.3"
+    "eslint": "^3.19.0",
+    "gulp-sourcemaps": "^2.6.0",
+    "mocha": "^3.3.0",
+    "node-version-check": "^2.1.1",
+    "proxyquire": "^1.7.11",
+    "sinon": "^2.2.0"
   },
   "files": []
 }
