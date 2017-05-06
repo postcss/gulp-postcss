@@ -166,6 +166,11 @@ module.exports = function (ctx) {
 
 ## Changelog
 
+* 7.0.0
+  * Bump PostCSS to 6.0
+  * Smaller module size
+  * Use eslint instead of jshint
+
 * 6.4.0
   * Add more details to `PluginError` object
 
