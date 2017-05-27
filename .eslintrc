@@ -8,42 +8,44 @@
   "globals": {
     "Promise": true
   },
+  "root": true,
   "rules": {
-    "semi": [
-      2,
-      "never"
+    "block-spacing": "error",
+    "comma-style": [
+      "error",
+      "first"
     ],
-    "no-cond-assign": [
-      2,
-      "except-parens"
-    ],
-    "no-unused-expressions": 2,
     "indent": [
-      2,
+      "error",
       2,
       {
         "SwitchCase": 1
       }
     ],
-    "comma-style": [
-      2,
-      "first"
-    ],
+    "keyword-spacing": "error",
     "max-len": [
-      2,
+      "error",
       {
         "code": 100,
         "ignoreComments": true
       }
     ],
-    "new-cap": 2,
-    "strict": 0,
-    "no-trailing-spaces": 2,
-    "no-undef": 2,
-    "no-unused-vars": 2,
+    "new-cap": "error",
+    "no-cond-assign": "error",
+    "no-multi-spaces": "error",
+    "no-trailing-spaces": "error",
+    "no-undef": "error",
+    "no-unused-expressions": "error",
+    "no-unused-vars": "error",
     "quotes": [
-      2,
+      "error",
       "single"
-    ]
+    ],
+    "semi": [
+      "error",
+      "never"
+    ],
+    "spaced-comment": "error",
+    "strict": "error"
   }
 }

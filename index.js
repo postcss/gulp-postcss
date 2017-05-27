@@ -1,9 +1,10 @@
+'use strict'
 var Stream = require('stream')
 var postcss = require('postcss')
 var applySourceMap = require('vinyl-sourcemaps-apply')
 var gutil = require('gulp-util')
+var syntax = require('postcss-html')
 var path = require('path')
-
 
 module.exports = withConfigLoader(function (loadConfig) {
 
@@ -46,6 +47,9 @@ module.exports = withConfigLoader(function (loadConfig) {
             )
           }
         }
+        if (!(options.syntax || options.parser || options.stringifier)) {
+          options.syntax = syntax
+        }
         return postcss(config.plugins || [])
           .process(file.contents, options)
       })
@@ -77,9 +81,8 @@ module.exports = withConfigLoader(function (loadConfig) {
     }
 
     function handleError (error) {
-      var errorOptions = { fileName: file.path, showStack: true }
+      var errorOptions = { fileName: file.path, showStack: true, error: error }
       if (error.name === 'CssSyntaxError') {
-        errorOptions.error = error
         errorOptions.fileName = error.file || file.path
         errorOptions.lineNumber = error.line
         errorOptions.showProperties = false

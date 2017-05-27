@@ -1,4 +1,7 @@
-/* global it, afterEach, beforeEach, describe, Promise */
+'use strict'
+/* eslint-env node, mocha */
+/* eslint comma-style: ["error", "last"] */
+/* eslint max-len: ["off"] */
 
 var assert = require('assert')
 var gutil = require('gulp-util')
@@ -89,7 +92,7 @@ it('should respond with error on stream files', function (cb) {
     isStream: function () { return true },
     isNull: function() { return false },
     path: path.resolve('testpath')
-  };
+  }
 
   stream.write(streamFile)
 
@@ -151,6 +154,56 @@ it('should correctly generate relative source map', function (cb) {
 
 })
 
+describe('PostCSS Syntax Infer', function () {
+  it('should parse less file with out syntax config', function (cb) {
+    var stream = postcss([doubler])
+    var less = [
+      '@base: #f938ab;',
+      '.box {',
+      '  color: saturate(@base, 5%);',
+      '}',
+    ]
+
+    stream.on('error', cb)
+    stream.on('data', function(file) {
+      assert.equal(file.contents.toString(), [
+        less[0],
+        less[0],
+        less[1],
+        less[2],
+        less[2],
+        less[3],
+      ].join('\n'))
+      cb()
+    })
+
+    stream.write(new gutil.File({
+      base: __dirname + '/src',
+      path: __dirname + '/src/fixture.less',
+      contents: new Buffer(less.join('\n'))
+    }))
+
+    stream.end()
+  })
+
+  it('should show error for `MODULE_NOT_FOUND`', function (cb) {
+    var stream = postcss([doubler])
+
+    stream.on('error', function(error) {
+      assert.equal(error.code, 'MODULE_NOT_FOUND')
+      assert.equal(error.message, 'Cannot find module \'postcss-sass\'')
+      cb()
+    })
+
+    stream.write(new gutil.File({
+      base: __dirname + '/src',
+      path: __dirname + '/src/fixture.sass',
+      contents: new Buffer('a {')
+    }))
+
+    stream.end()
+  })
+})
 
 describe('PostCSS Guidelines', function () {
 
@@ -163,27 +216,27 @@ describe('PostCSS Guidelines', function () {
       return this.source
     }
     this.toString = function(){
-      var code = this.showSourceCode();
+      var code = this.showSourceCode()
       if ( code ) {
-          code = '\n\n' + code + '\n';
+        code = '\n\n' + code + '\n'
       }
-      return this.name + ': ' + this.message + code;
+      return this.name + ': ' + this.message + code
     }
   }
   var postcssStub = {
-    use: function () {}
-  , process: function () {}
+    use: function () {},
+    process: function () {}
   }
   var postcssLoadConfigStub
   var postcss = proxyquire('./index', {
     postcss: function (plugins) {
       postcssStub.use(plugins)
       return postcssStub
-    }
-  , 'postcss-load-config': function (ctx, configPath) {
+    },
+    'postcss-load-config': function (ctx, configPath) {
       return postcssLoadConfigStub(ctx, configPath)
-    }
-  , 'vinyl-sourcemaps-apply': function () {
+    },
+    'vinyl-sourcemaps-apply': function () {
       return {}
     }
   })
@@ -203,8 +256,8 @@ describe('PostCSS Guidelines', function () {
     var stream = postcss([ doubler ])
     var cssPath = __dirname + '/src/fixture.css'
     postcssStub.process.returns(Promise.resolve({
-      css: ''
-    , warnings: function () {
+      css: '',
+      warnings: function () {
         return []
       }
     }))
@@ -216,8 +269,8 @@ describe('PostCSS Guidelines', function () {
     })
 
     stream.write(new gutil.File({
-      contents: new Buffer('a {}')
-    , path: cssPath
+      contents: new Buffer('a {}'),
+      path: cssPath
     }))
 
     stream.end()
@@ -228,8 +281,8 @@ describe('PostCSS Guidelines', function () {
 
     var stream = postcss([ doubler ], {to: 'overriden'})
     postcssStub.process.returns(Promise.resolve({
-      css: ''
-    , warnings: function () {
+      css: '',
+      warnings: function () {
         return []
       }
     }))
@@ -251,19 +304,19 @@ describe('PostCSS Guidelines', function () {
 
     var cssPath = __dirname + '/fixture.css'
     var file = new gutil.File({
-      contents: new Buffer('a {}')
-    , path: cssPath
+      contents: new Buffer('a {}'),
+      path: cssPath
     })
     var plugins = [ doubler ]
     var callback = sandbox.stub().returns({
-      plugins: plugins
-    , options: { to: 'overriden' }
+      plugins: plugins,
+      options: { to: 'overriden' }
     })
     var stream = postcss(callback)
 
     postcssStub.process.returns(Promise.resolve({
-      css: ''
-    , warnings: function () {
+      css: '',
+      warnings: function () {
         return []
       }
     }))
@@ -283,28 +336,28 @@ describe('PostCSS Guidelines', function () {
 
     var cssPath = __dirname + '/fixture.css'
     var file = new gutil.File({
-      contents: new Buffer('a {}')
-    , path: cssPath
+      contents: new Buffer('a {}'),
+      path: cssPath
     })
     var stream = postcss({ to: 'initial' })
     var plugins = [ doubler ]
 
     postcssLoadConfigStub.returns(Promise.resolve({
-      plugins: plugins
-    , options: { to: 'overriden' }
+      plugins: plugins,
+      options: { to: 'overriden' }
     }))
 
     postcssStub.process.returns(Promise.resolve({
-      css: ''
-    , warnings: function () {
+      css: '',
+      warnings: function () {
         return []
       }
     }))
 
     stream.on('data', function () {
       assert.deepEqual(postcssLoadConfigStub.getCall(0).args[0], {
-        file: file
-      , options: { to: 'initial' }
+        file: file,
+        options: { to: 'initial' }
       })
       assert.equal(postcssStub.use.getCall(0).args[0], plugins)
       assert.equal(postcssStub.process.getCall(0).args[1].to, 'overriden')
@@ -320,8 +373,8 @@ describe('PostCSS Guidelines', function () {
     var stream = postcss()
     postcssLoadConfigStub.returns(Promise.resolve({ plugins: [] }))
     postcssStub.process.returns(Promise.resolve({
-      css: ''
-    , warnings: function () {
+      css: '',
+      warnings: function () {
         return []
       }
     }))
@@ -330,8 +383,8 @@ describe('PostCSS Guidelines', function () {
       cb()
     })
     stream.end(new gutil.File({
-      contents: new Buffer('a {}')
-    , path: cssPath
+      contents: new Buffer('a {}'),
+      path: cssPath
     }))
   })
 
@@ -340,8 +393,8 @@ describe('PostCSS Guidelines', function () {
     var stream = postcss({ config: '/absolute/path' })
     postcssLoadConfigStub.returns(Promise.resolve({ plugins: [] }))
     postcssStub.process.returns(Promise.resolve({
-      css: ''
-    , warnings: function () {
+      css: '',
+      warnings: function () {
         return []
       }
     }))
@@ -350,8 +403,8 @@ describe('PostCSS Guidelines', function () {
       cb()
     })
     stream.end(new gutil.File({
-      contents: new Buffer('a {}')
-    , path: cssPath
+      contents: new Buffer('a {}'),
+      path: cssPath
     }))
   })
 
@@ -360,8 +413,8 @@ describe('PostCSS Guidelines', function () {
     var stream = postcss({ config: './relative/path' })
     postcssLoadConfigStub.returns(Promise.resolve({ plugins: [] }))
     postcssStub.process.returns(Promise.resolve({
-      css: ''
-    , warnings: function () {
+      css: '',
+      warnings: function () {
         return []
       }
     }))
@@ -370,9 +423,9 @@ describe('PostCSS Guidelines', function () {
       cb()
     })
     stream.end(new gutil.File({
-      contents: new Buffer('a {}')
-    , path: cssPath
-    , base: __dirname
+      contents: new Buffer('a {}'),
+      path: cssPath,
+      base: __dirname
     }))
   })
 
@@ -380,11 +433,11 @@ describe('PostCSS Guidelines', function () {
     var stream = postcss([ doubler ], { from: 'overriden', map: 'overriden' })
     var cssPath = __dirname + '/fixture.css'
     postcssStub.process.returns(Promise.resolve({
-      css: ''
-    , warnings: function () {
+      css: '',
+      warnings: function () {
         return []
-      }
-    , map: {
+      },
+      map: {
         toJSON: function () {
           return {
             sources: [],
@@ -407,8 +460,8 @@ describe('PostCSS Guidelines', function () {
     })
 
     var file = new gutil.File({
-      contents: new Buffer('a {}')
-    , path: cssPath
+      contents: new Buffer('a {}'),
+      path: cssPath
     })
     file.sourceMap = {}
     stream.end(file)
@@ -448,20 +501,20 @@ describe('PostCSS Guidelines', function () {
 
     sandbox.stub(gutil, 'log')
     postcssStub.process.returns(Promise.resolve({
-      css: ''
-    , warnings: function () {
+      css: '',
+      warnings: function () {
         return [new Warning('msg1'), new Warning('msg2')]
       }
     }))
 
     stream.on('data', function () {
-      assert(gutil.log.calledWith('gulp-postcss:', 'src' +  path.sep + 'fixture.css\nmsg1\nmsg2'))
+      assert(gutil.log.calledWith('gulp-postcss:', 'src' + path.sep + 'fixture.css\nmsg1\nmsg2'))
       cb()
     })
 
     stream.write(new gutil.File({
-      contents: new Buffer('a {}')
-    , path: cssPath
+      contents: new Buffer('a {}'),
+      path: cssPath
     }))
 
     stream.end()
@@ -478,8 +531,8 @@ describe('PostCSS Guidelines', function () {
     var stream = postcss([ doubler ], options)
     var cssPath = __dirname + '/src/fixture.css'
     postcssStub.process.returns(Promise.resolve({
-      css: ''
-    , warnings: function () {
+      css: '',
+      warnings: function () {
         return []
       }
     }))
@@ -495,8 +548,8 @@ describe('PostCSS Guidelines', function () {
     })
 
     stream.write(new gutil.File({
-      contents: new Buffer('a {}')
-    , path: cssPath
+      contents: new Buffer('a {}'),
+      path: cssPath
     }))
 
     stream.end()

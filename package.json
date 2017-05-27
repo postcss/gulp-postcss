@@ -4,7 +4,7 @@
   "description": "PostCSS gulp plugin",
   "main": "index.js",
   "scripts": {
-    "pretest": "eslint index.js",
+    "pretest": "eslint *.js",
     "test": "mocha test.js"
   },
   "repository": {
@@ -26,15 +26,23 @@
   "dependencies": {
     "gulp-util": "^3.0.8",
     "postcss": "^6.0.0",
+    "postcss-html": "^0.3.0",
     "postcss-load-config": "^1.2.0",
     "vinyl-sourcemaps-apply": "^0.2.1"
+  },
+  "peerDependencies": {
+    "postcss-less": "^1.0.0",
+    "postcss-sass": "^0.1.0",
+    "postcss-scss": "^1.0.0",
+    "sugarss": "^1.0.0"
   },
   "devDependencies": {
     "eslint": "^3.19.0",
     "gulp-sourcemaps": "^2.6.0",
     "mocha": "^3.3.0",
+    "postcss-less": "^1.0.0",
     "proxyquire": "^1.7.11",
-    "sinon": "^2.2.0"
+    "sinon": "^2.3.2"
   },
   "files": []
 }
