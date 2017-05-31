@@ -1,7 +1,7 @@
 {
-  "name": "gulp-postcss",
-  "version": "7.0.0",
-  "description": "PostCSS gulp plugin",
+  "name": "gulp-html-postcss",
+  "version": "6.0.1",
+  "description": "Process inline CSS in HTML using PostCSS gulp plugin",
   "main": "index.js",
   "scripts": {
     "pretest": "eslint *.js",
@@ -9,20 +9,25 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/postcss/gulp-postcss.git"
+    "url": "https://github.com/StartPolymer/gulp-html-postcss.git"
   },
   "keywords": [
     "gulpplugin",
     "postcss",
     "postcss-runner",
-    "css"
+    "css",
+    "html",
+    "vue"
   ],
-  "author": "Andrey Kuzmin <unsoundscapes@gmail.com>",
+  "author": "Start Polymer Authors (http://startpolymer.org/AUTHORS.txt)",
+  "contributors": [
+    "Andrey Kuzmin <unsoundscapes@gmail.com>"
+  ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/postcss/gulp-postcss/issues"
+    "url": "https://github.com/StartPolymer/gulp-html-postcss/issues"
   },
-  "homepage": "https://github.com/postcss/gulp-postcss",
+  "homepage": "https://github.com/StartPolymer/gulp-html-postcss",
   "dependencies": {
     "gulp-util": "^3.0.8",
     "postcss": "^6.0.0",
