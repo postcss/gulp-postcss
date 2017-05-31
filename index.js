@@ -25,7 +25,7 @@ module.exports = withConfigLoader(function (loadConfig) {
       : {}
 
     var options = {
-      from: file.history[0]
+      from: file.path
     , to: file.path
       // Generate a separate source map for gulp-sourcemaps
     , map: file.sourceMap ? { annotation: false } : false
