@@ -39,9 +39,9 @@
   "devDependencies": {
     "eslint": "^3.19.0",
     "gulp-sourcemaps": "^2.6.0",
-    "mocha": "^3.3.0",
-    "postcss-less": "^1.0.0",
-    "proxyquire": "^1.7.11",
+    "mocha": "^3.4.2",
+    "postcss-less": "^1.0.1",
+    "proxyquire": "^1.8.0",
     "sinon": "^2.3.2"
   },
   "files": []
