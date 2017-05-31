@@ -47,9 +47,9 @@ module.exports = withConfigLoader(function (loadConfig) {
             )
           }
         }
-        if (!(options.syntax || options.parser || options.stringifier)) {
-          options.syntax = syntax
-        }
+
+        options.syntax = syntax(options.syntax)
+
         return postcss(config.plugins || [])
           .process(file.contents, options)
       })
@@ -57,7 +57,6 @@ module.exports = withConfigLoader(function (loadConfig) {
 
     function handleResult (result) {
       var map
-      var warnings = result.warnings().join('\n')
 
       file.contents = new Buffer(result.css)
 
@@ -71,9 +70,7 @@ module.exports = withConfigLoader(function (loadConfig) {
         applySourceMap(file, map)
       }
 
-      if (warnings) {
-        gutil.log('gulp-postcss:', file.relative + '\n' + warnings)
-      }
+      file.postcss = result
 
       setImmediate(function () {
         cb(null, file)

@@ -489,7 +489,7 @@ describe('PostCSS Guidelines', function () {
   })
 
 
-  it('should display `result.warnings()` content', function (cb) {
+  it('should get `result.warnings()` content', function (cb) {
 
     var stream = postcss([ doubler ])
     var cssPath = __dirname + '/src/fixture.css'
@@ -507,43 +507,10 @@ describe('PostCSS Guidelines', function () {
       }
     }))
 
-    stream.on('data', function () {
-      assert(gutil.log.calledWith('gulp-postcss:', 'src' + path.sep + 'fixture.css\nmsg1\nmsg2'))
-      cb()
-    })
-
-    stream.write(new gutil.File({
-      contents: new Buffer('a {}'),
-      path: cssPath
-    }))
-
-    stream.end()
-
-  })
-
-  it('should pass options down to PostCSS', function (cb) {
-
-    var customSyntax = function () {}
-    var options = {
-      syntax: customSyntax
-    }
-
-    var stream = postcss([ doubler ], options)
-    var cssPath = __dirname + '/src/fixture.css'
-    postcssStub.process.returns(Promise.resolve({
-      css: '',
-      warnings: function () {
-        return []
-      }
-    }))
-
-    stream.on('data', function () {
-      var resultOptions = postcssStub.process.getCall(0).args[1]
-      // remove automatically set options
-      delete resultOptions.from
-      delete resultOptions.to
-      delete resultOptions.map
-      assert.deepEqual(resultOptions, options)
+    stream.on('data', function (file) {
+      var warnings = file.postcss.warnings()
+      assert.equal(warnings[0].toString(), 'msg1')
+      assert.equal(warnings[1].toString(), 'msg2')
       cb()
     })
 
@@ -558,6 +525,57 @@ describe('PostCSS Guidelines', function () {
 
 })
 
+describe('<style> tag', function () {
+
+  it('`<style type="text/less">` tags', function (cb) {
+    function createHtml(css){
+      return '<html><head><style type="text/less">' + css + '</style></head></html>'
+
+    }
+
+    var stream = postcss(
+      [ asyncDoubler, objectDoubler() ]
+    )
+
+    stream.on('data', function (file) {
+      var result = file.contents.toString('utf8')
+      var target = createHtml('a { color: black; color: black; color: black; color: black }')
+      assert.equal( result, target )
+      cb()
+    })
+
+    stream.write(new gutil.File({
+      contents: new Buffer(createHtml('a { color: black }'))
+    }))
+
+    stream.end()
+  })
+
+  it('vue component', function (cb) {
+    function createVue(css) {
+      return '<style lang="less">' + css + '</style>'
+
+    }
+
+    var stream = postcss(
+      [ asyncDoubler, objectDoubler() ]
+    )
+
+    stream.on('data', function (file) {
+      var result = file.contents.toString('utf8')
+      var target = createVue('a { color: black; color: black; color: black; color: black }')
+      assert.equal( result, target )
+      cb()
+    })
+
+    stream.write(new gutil.File({
+      contents: new Buffer(createVue('a { color: black }'))
+    }))
+
+    stream.end()
+  })
+
+})
 
 function doubler (css) {
   css.walkDecls(function (decl) {
