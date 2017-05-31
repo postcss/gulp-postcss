@@ -32,9 +32,9 @@
   "devDependencies": {
     "eslint": "^3.19.0",
     "gulp-sourcemaps": "^2.6.0",
-    "mocha": "^3.3.0",
-    "proxyquire": "^1.7.11",
-    "sinon": "^2.2.0"
+    "mocha": "^3.4.2",
+    "proxyquire": "^1.8.0",
+    "sinon": "^2.3.2"
   },
   "files": []
 }
