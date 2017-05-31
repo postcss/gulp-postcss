@@ -31,7 +31,7 @@
   "dependencies": {
     "gulp-util": "^3.0.8",
     "postcss": "^6.0.0",
-    "postcss-html": "^0.3.0",
+    "postcss-html": "^0.4.0",
     "postcss-load-config": "^1.2.0",
     "vinyl-sourcemaps-apply": "^0.2.1"
   },
