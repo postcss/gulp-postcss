@@ -4,7 +4,7 @@
   "description": "PostCSS gulp plugin",
   "main": "index.js",
   "scripts": {
-    "pretest": "eslint index.js",
+    "pretest": "eslint *.js",
     "test": "mocha test.js"
   },
   "repository": {
@@ -31,6 +31,7 @@
   },
   "devDependencies": {
     "eslint": "^3.19.0",
+    "gulp-rename": "^1.2.2",
     "gulp-sourcemaps": "^2.6.0",
     "mocha": "^3.3.0",
     "proxyquire": "^1.7.11",
