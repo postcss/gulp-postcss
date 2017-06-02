@@ -1,0 +1,51 @@
+{
+  "env": {
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended"
+  ],
+  "globals": {
+    "Promise": true
+  },
+  "root": true,
+  "rules": {
+    "block-spacing": "error",
+    "comma-style": [
+      "error",
+      "first"
+    ],
+    "indent": [
+      "error",
+      2,
+      {
+        "SwitchCase": 1
+      }
+    ],
+    "keyword-spacing": "error",
+    "max-len": [
+      "error",
+      {
+        "code": 100,
+        "ignoreComments": true
+      }
+    ],
+    "new-cap": "error",
+    "no-cond-assign": "error",
+    "no-multi-spaces": "error",
+    "no-trailing-spaces": "error",
+    "no-undef": "error",
+    "no-unused-expressions": "error",
+    "no-unused-vars": "error",
+    "quotes": [
+      "error",
+      "single"
+    ],
+    "semi": [
+      "error",
+      "never"
+    ],
+    "spaced-comment": "error",
+    "strict": "error"
+  }
+}
