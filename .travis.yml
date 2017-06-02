@@ -4,3 +4,8 @@ node_js:
   - stable
   - 6
   - 4
+before_install:
+ - npm i npm@latest -g
+
+after_success:
+  - "npm run coveralls"

@@ -1,11 +1,28 @@
 {
   "name": "gulp-postcss",
+  "nyc": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 100,
+    "include": [
+      "lib/**/*.js"
+    ],
+    "reporter": [
+      "lcov",
+      "text"
+    ],
+    "cache": true,
+    "all": true,
+    "check-coverage": true
+  },
   "version": "7.0.0",
   "description": "PostCSS gulp plugin",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
-    "pretest": "eslint index.js",
-    "test": "mocha test.js"
+    "coveralls": "coveralls < coverage/lcov.info",
+    "pretest": "eslint lib test",
+    "test": "nyc mocha"
   },
   "repository": {
     "type": "git",
@@ -24,17 +41,32 @@
   },
   "homepage": "https://github.com/postcss/gulp-postcss",
   "dependencies": {
+    "bufferstreams": "^1.1.1",
+    "coveralls": "^2.13.1",
     "gulp-util": "^3.0.8",
     "postcss": "^6.0.0",
+    "postcss-html": "^0.4.0",
     "postcss-load-config": "^1.2.0",
+    "postcss-load-options": "^1.2.0",
+    "postcss-load-plugins": "^2.3.0",
     "vinyl-sourcemaps-apply": "^0.2.1"
+  },
+  "peerDependencies": {
+    "postcss-less": "^1.0.0",
+    "postcss-sass": "^0.1.0",
+    "postcss-scss": "^1.0.0",
+    "sugarss": "^1.0.0"
   },
   "devDependencies": {
     "eslint": "^3.19.0",
+    "from2-array": "0.0.4",
+    "gulp-rename": "^1.2.2",
     "gulp-sourcemaps": "^2.6.0",
-    "mocha": "^3.3.0",
-    "proxyquire": "^1.7.11",
-    "sinon": "^2.2.0"
+    "mocha": "^3.4.2",
+    "nyc": "^11.0.1",
+    "postcss-less": "^1.0.1",
+    "proxyquire": "^1.8.0",
+    "sinon": "^2.3.2"
   },
   "files": []
 }
