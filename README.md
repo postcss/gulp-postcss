@@ -26,81 +26,42 @@ gulp.task('css', function () {
 });
 ```
 
-## Passing plugins directly
+## Advanced usage
+
+You can pass config as an {Object}
+as [described here](https://www.npmjs.com/package/postcss-load-config#postcssrc),
+
+If you want to configure postcss on per-file-basis, you can pass a callback
+that receives `ctx` with the context options and the [vinyl file](https://github.com/gulpjs/vinyl).
+[Described here](https://www.npmjs.com/package/postcss-load-config#postcssconfigjs-or-postcssrcjs),
 
 ```js
-var postcss = require('gulp-postcss');
 var gulp = require('gulp');
+var postcss = require('gulp-postcss');
+var reporter = require('gulp-reporter');
 var autoprefixer = require('autoprefixer');
 var cssnano = require('cssnano');
-
-gulp.task('css', function () {
-    var plugins = [
-        autoprefixer({browsers: ['last 1 version']}),
-        cssnano()
-    ];
-    return gulp.src(['./src/*.html', './src/*.vue', './src/*.css'])
-        .pipe(postcss(plugins))
-        .pipe(gulp.dest('./dest'));
-});
-```
-
-## Passing additional options to PostCSS
-
-The second optional argument to gulp-postcss is passed to PostCSS.
-
-This, for instance, may be used to enable custom parser:
-
-```js
-var gulp = require('gulp');
-var postcss = require('gulp-postcss');
-var nested = require('postcss-nested');
 var sugarss = require('sugarss');
 
-gulp.task('default', function () {
-    var plugins = [nested];
-    return gulp.src('in.sss')
-        .pipe(postcss(plugins, { parser: sugarss }))
-        .pipe(gulp.dest('out'));
-});
-```
-
-## Using a custom processor
-
-```js
-var postcss = require('gulp-postcss');
-var cssnext = require('postcss-cssnext');
-var opacity = function (css, opts) {
-    css.eachDecl(function(decl) {
-        if (decl.prop === 'opacity') {
-            decl.parent.insertAfter(decl, {
-                prop: '-ms-filter',
-                value: '"progid:DXImageTransform.Microsoft.Alpha(Opacity=' + (parseFloat(decl.value) * 100) + ')"'
-            });
-        }
-    });
-};
-
 gulp.task('css', function () {
-    var plugins = [
-        cssnext({browsers: ['last 1 version']}),
-        opacity
-    ];
-    return gulp.src(['./src/*.html', './src/*.vue', './src/*.css'])
-        .pipe(postcss(plugins))
+    function callback(ctx) {
+        return {
+            // Configure parser on per-file-basis.
+            parser: ctx.file.extname === '.sss' ? 'sugarss' : false,
+            // Plugins can be loaded in either using an {Object} or an {Array}.
+            plugins: [
+                autoprefixer,
+                cssnano
+            ]
+        };
+    }
+    return gulp.src('./src/*.css', {
+        // Source map support
+        sourcemaps: true
+    })
+        .pipe(postcss(callback))
+        // Message repport support
+        .pipe(reporter())
         .pipe(gulp.dest('./dest'));
 });
-```
-
-## Source map support
-
-Source map is disabled by default, to extract map use together
-with [gulp-sourcemaps](https://github.com/floridoo/gulp-sourcemaps).
-
-```js
-return gulp.src(['./src/*.html', './src/*.vue', './src/*.css'])
-    .pipe(sourcemaps.init())
-    .pipe(postcss(plugins))
-    .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest('./dest'));
 ```

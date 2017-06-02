@@ -1,11 +1,28 @@
 {
   "name": "gulp-html-postcss",
+  "nyc": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 100,
+    "include": [
+      "lib/**/*.js"
+    ],
+    "reporter": [
+      "lcov",
+      "text"
+    ],
+    "cache": true,
+    "all": true,
+    "check-coverage": true
+  },
   "version": "6.0.1",
   "description": "Process inline CSS in HTML using PostCSS gulp plugin",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
-    "pretest": "eslint *.js",
-    "test": "mocha test.js"
+    "coveralls": "coveralls < coverage/lcov.info",
+    "pretest": "eslint index.js",
+    "test": "nyc mocha"
   },
   "repository": {
     "type": "git",
@@ -29,10 +46,14 @@
   },
   "homepage": "https://github.com/StartPolymer/gulp-html-postcss",
   "dependencies": {
+    "bufferstreams": "^1.1.1",
+    "coveralls": "^2.13.1",
     "gulp-util": "^3.0.8",
     "postcss": "^6.0.0",
     "postcss-html": "^0.4.0",
     "postcss-load-config": "^1.2.0",
+    "postcss-load-options": "^1.2.0",
+    "postcss-load-plugins": "^2.3.0",
     "vinyl-sourcemaps-apply": "^0.2.1"
   },
   "peerDependencies": {
@@ -43,8 +64,11 @@
   },
   "devDependencies": {
     "eslint": "^3.19.0",
+    "from2-array": "0.0.4",
+    "gulp-rename": "^1.2.2",
     "gulp-sourcemaps": "^2.6.0",
     "mocha": "^3.4.2",
+    "nyc": "^11.0.1",
     "postcss-less": "^1.0.1",
     "proxyquire": "^1.8.0",
     "sinon": "^2.3.2"
