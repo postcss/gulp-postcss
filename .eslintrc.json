@@ -55,6 +55,8 @@
     "no-undef": "error",
     "no-unused-expressions": "error",
     "no-unused-vars": "error",
+    "no-var": "error",
+    "prefer-const": "error",
     "quotes": [
       "error",
       "single"

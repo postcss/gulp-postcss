@@ -2,19 +2,19 @@
 /* eslint-env node, mocha */
 /* eslint max-len: ["off"] */
 
-var assert = require('assert');
-var gutil = require('gulp-util');
-var sourceMaps = require('gulp-sourcemaps');
-var postcss = require('../');
-var proxyquire = require('proxyquire');
-var sinon = require('sinon');
-var path = require('path');
-var syntax = require('postcss-html');
+const assert = require('assert');
+const gutil = require('gulp-util');
+const sourceMaps = require('gulp-sourcemaps');
+const postcss = require('../');
+const proxyquire = require('proxyquire');
+const sinon = require('sinon');
+const path = require('path');
+const syntax = require('postcss-html');
 const from = require('from2-array');
 
 it('should pass file when it isNull()', function (cb) {
-	var stream = postcss([ doubler ]);
-	var emptyFile = new gutil.File();
+	const stream = postcss([ doubler ]);
+	const emptyFile = new gutil.File();
 
 	stream.once('data', function (data) {
 		assert.equal(data, emptyFile);
@@ -28,13 +28,13 @@ it('should pass file when it isNull()', function (cb) {
 
 it('should transform css with multiple processors', function (cb) {
 
-	var stream = postcss(
+	const stream = postcss(
     [ asyncDoubler, objectDoubler() ]
   );
 
 	stream.on('data', function (file) {
-		var result = file.contents.toString('utf8');
-		var target = 'a { color: black; color: black; color: black; color: black }';
+		const result = file.contents.toString('utf8');
+		const target = 'a { color: black; color: black; color: black; color: black }';
 		assert.equal( result, target );
 		cb();
 	});
@@ -50,7 +50,7 @@ it('should transform css with multiple processors', function (cb) {
 
 it('should correctly wrap postcss errors', function (cb) {
 
-	var stream = postcss([ doubler ]);
+	const stream = postcss([ doubler ]);
 
 	stream.on('error', function (err) {
 		assert.ok(err instanceof gutil.PluginError);
@@ -76,14 +76,14 @@ it('should correctly wrap postcss errors', function (cb) {
 
 it('should transform css on stream files', function (cb) {
 
-	var stream = postcss([ doubler ]);
+	const stream = postcss([ doubler ]);
 
 	stream.on('data', function (file) {
 		assert.equal(file.postcss.content, '.from {}');
 		cb();
 	});
 
-	var streamFile = new gutil.File({
+	const streamFile = new gutil.File({
 		contents: from([new Buffer('.from {}')]),
 		path: path.resolve('testpath'),
 	});
@@ -96,9 +96,9 @@ it('should transform css on stream files', function (cb) {
 
 it('should generate source maps', function (cb) {
 
-	var init = sourceMaps.init();
-	var write = sourceMaps.write();
-	var css = postcss(
+	const init = sourceMaps.init();
+	const write = sourceMaps.write();
+	const css = postcss(
     [ doubler, asyncDoubler ]
   );
 
@@ -125,8 +125,8 @@ it('should generate source maps', function (cb) {
 
 it('should correctly generate relative source map', function (cb) {
 
-	var init = sourceMaps.init();
-	var css = postcss(
+	const init = sourceMaps.init();
+	const css = postcss(
     [ doubler, doubler ]
   );
 
@@ -150,8 +150,8 @@ it('should correctly generate relative source map', function (cb) {
 
 describe('PostCSS Syntax Infer', function () {
 	it('should parse less file with out syntax config', function (cb) {
-		var stream = postcss([doubler]);
-		var less = [
+		const stream = postcss([doubler]);
+		const less = [
 			'@base: #f938ab;',
 			'.box {',
 			'  color: saturate(@base, 5%);',
@@ -181,7 +181,7 @@ describe('PostCSS Syntax Infer', function () {
 	});
 
 	it('should show error for `MODULE_NOT_FOUND`', function (cb) {
-		var stream = postcss([doubler]);
+		const stream = postcss([doubler]);
 
 		stream.on('error', function(error) {
 			assert.equal(error.code, 'MODULE_NOT_FOUND');
@@ -201,8 +201,8 @@ describe('PostCSS Syntax Infer', function () {
 
 describe('PostCSS Guidelines', function () {
 
-	var sandbox = sinon.sandbox.create();
-	var CssSyntaxError = function (message, source) {
+	const sandbox = sinon.sandbox.create();
+	const CssSyntaxError = function (message, source) {
 		this.name = 'CssSyntaxError';
 		this.message = message;
 		this.source = source;
@@ -210,19 +210,19 @@ describe('PostCSS Guidelines', function () {
 			return this.source;
 		};
 		this.toString = function(){
-			var code = this.showSourceCode();
+			let code = this.showSourceCode();
 			if ( code ) {
 				code = '\n\n' + code + '\n';
 			}
 			return this.name + ': ' + this.message + code;
 		};
 	};
-	var postcssStub = {
+	const postcssStub = {
 		use: function () {},
 		process: function () {},
 	};
-	var postcssLoadConfigStub;
-	var postcss = proxyquire('../', {
+	let postcssLoadConfigStub;
+	const postcss = proxyquire('../', {
 		'./process': proxyquire('../lib/process', {
 			postcss: function (plugins) {
 				postcssStub.use(plugins);
@@ -253,12 +253,12 @@ describe('PostCSS Guidelines', function () {
 
 	it('should set `from` and `to` processing options to `file.path`', function (cb) {
 
-		var rename = require('gulp-rename')({
+		const rename = require('gulp-rename')({
 			extname: '.css',
 		});
-		var stream = postcss([ doubler ]);
-		var mdPath = path.join(__dirname, '/src/fixture.md');
-		var cssPath = path.join(__dirname, '/src/fixture.css');
+		const stream = postcss([ doubler ]);
+		const mdPath = path.join(__dirname, '/src/fixture.md');
+		const cssPath = path.join(__dirname, '/src/fixture.css');
 		postcssStub.process.returns(Promise.resolve({
 			content: '',
 			warnings: function () {
@@ -285,7 +285,7 @@ describe('PostCSS Guidelines', function () {
 
 	it('should allow override of `to` processing option', function (cb) {
 
-		var stream = postcss({
+		const stream = postcss({
 			plugin: [ doubler ],
 			to: 'overriden',
 		});
@@ -311,17 +311,17 @@ describe('PostCSS Guidelines', function () {
 
 	it('should take plugins and options from callback', function (cb) {
 
-		var cssPath = path.join(__dirname, 'fixture.css');
-		var file = new gutil.File({
+		const cssPath = path.join(__dirname, 'fixture.css');
+		const file = new gutil.File({
 			contents: new Buffer('a {}'),
 			path: cssPath,
 		});
-		var plugins = [ doubler ];
-		var callback = sandbox.stub().returns({
+		const plugins = [ doubler ];
+		const callback = sandbox.stub().returns({
 			plugins: plugins,
 			to: 'overriden',
 		});
-		var stream = postcss(callback);
+		const stream = postcss(callback);
 
 		postcssStub.process.returns(Promise.resolve({
 			content: '',
@@ -350,13 +350,13 @@ describe('PostCSS Guidelines', function () {
 
 	it('should take plugins and options from postcss-load-config', function (cb) {
 
-		var cssPath = path.join(__dirname, 'fixture.css');
-		var file = new gutil.File({
+		const cssPath = path.join(__dirname, 'fixture.css');
+		const file = new gutil.File({
 			contents: new Buffer('a {}'),
 			path: cssPath,
 		});
-		var stream = postcss();
-		var plugins = [ doubler ];
+		const stream = postcss();
+		const plugins = [ doubler ];
 
 		postcssLoadConfigStub.returns(Promise.resolve({
 			plugins: plugins,
@@ -389,8 +389,8 @@ describe('PostCSS Guidelines', function () {
 	});
 
 	it('should point the config location to file directory', function (cb) {
-		var cssPath = path.join(__dirname, '/fixture.css');
-		var stream = postcss();
+		const cssPath = path.join(__dirname, '/fixture.css');
+		const stream = postcss();
 		postcssLoadConfigStub.returns(Promise.resolve({ plugins: [] }));
 		postcssStub.process.returns(Promise.resolve({
 			content: '',
@@ -409,8 +409,8 @@ describe('PostCSS Guidelines', function () {
 	});
 
 	it('should set the config location from `file.path', function (cb) {
-		var cssPath = path.join(__dirname, 'fixture.css');
-		var stream = postcss();
+		const cssPath = path.join(__dirname, 'fixture.css');
+		const stream = postcss();
 		postcssLoadConfigStub.returns(Promise.resolve({ plugins: [] }));
 		postcssStub.process.returns(Promise.resolve({
 			content: '',
@@ -429,8 +429,8 @@ describe('PostCSS Guidelines', function () {
 	});
 
 	it('should not override `from` and `map` if using gulp-sourcemaps', function (cb) {
-		var stream = postcss([ doubler ], { from: 'overriden', map: 'overriden' });
-		var cssPath = __dirname + '/fixture.css';
+		const stream = postcss([ doubler ], { from: 'overriden', map: 'overriden' });
+		const cssPath = __dirname + '/fixture.css';
 		postcssStub.process.returns(Promise.resolve({
 			content: '',
 			warnings: function () {
@@ -454,7 +454,7 @@ describe('PostCSS Guidelines', function () {
 			cb();
 		});
 
-		var file = new gutil.File({
+		const file = new gutil.File({
 			contents: new Buffer('a {}'),
 			path: cssPath,
 		});
@@ -464,8 +464,8 @@ describe('PostCSS Guidelines', function () {
 
 	it('should not output js stack trace for `CssSyntaxError`', function (cb) {
 
-		var stream = postcss([ doubler ]);
-		var cssSyntaxError = new CssSyntaxError('messageText', 'sourceCode');
+		const stream = postcss([ doubler ]);
+		const cssSyntaxError = new CssSyntaxError('messageText', 'sourceCode');
 		postcssStub.process.returns(Promise.reject(cssSyntaxError));
 
 		stream.on('error', function (error) {
@@ -486,8 +486,8 @@ describe('PostCSS Guidelines', function () {
 
 	it('should get `result.warnings()` content', function (cb) {
 
-		var stream = postcss([ doubler ]);
-		var cssPath = __dirname + '/src/fixture.css';
+		const stream = postcss([ doubler ]);
+		const cssPath = __dirname + '/src/fixture.css';
 		function Warning (msg) {
 			this.toString = function () {
 				return msg;
@@ -503,7 +503,7 @@ describe('PostCSS Guidelines', function () {
 		}));
 
 		stream.on('data', function (file) {
-			var warnings = file.postcss.warnings();
+			const warnings = file.postcss.warnings();
 			assert.equal(warnings[0].toString(), 'msg1');
 			assert.equal(warnings[1].toString(), 'msg2');
 			cb();
@@ -527,13 +527,13 @@ describe('<style> tag', function () {
 			return '<html><head><style type="text/less">' + css + '</style></head></html>';
 		}
 
-		var stream = postcss(
+		const stream = postcss(
       [ asyncDoubler, objectDoubler() ]
     );
 
 		stream.on('data', function (file) {
-			var result = file.contents.toString('utf8');
-			var target = createHtml('a { color: black; color: black; color: black; color: black }');
+			const result = file.contents.toString('utf8');
+			const target = createHtml('a { color: black; color: black; color: black; color: black }');
 			assert.equal( result, target );
 			cb();
 		});
@@ -551,13 +551,13 @@ describe('<style> tag', function () {
 
 		}
 
-		var stream = postcss(
+		const stream = postcss(
       [ asyncDoubler, objectDoubler() ]
     );
 
 		stream.on('data', function (file) {
-			var result = file.contents.toString('utf8');
-			var target = createVue('a { color: black; color: black; color: black; color: black }');
+			const result = file.contents.toString('utf8');
+			const target = createVue('a { color: black; color: black; color: black; color: black }');
 			assert.equal( result, target );
 			cb();
 		});
@@ -587,7 +587,7 @@ function asyncDoubler (css) {
 }
 
 function objectDoubler () {
-	var processor = require('postcss')();
+	const processor = require('postcss')();
 	processor.use(doubler);
 	return processor;
 }
