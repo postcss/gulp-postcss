@@ -166,6 +166,9 @@ module.exports = function (ctx) {
 
 ## Changelog
 
+* 7.0.1
+  * Bump PostCSS to 6.0.2
+
 * 7.0.0
   * Bump PostCSS to 6.0
   * Smaller module size

@@ -1,6 +1,6 @@
 {
   "name": "gulp-postcss",
-  "version": "7.0.0",
+  "version": "7.0.1",
   "description": "PostCSS gulp plugin",
   "main": "index.js",
   "scripts": {
