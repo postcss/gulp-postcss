@@ -4,3 +4,5 @@ node_js:
   - stable
   - 6
   - 4
+after_success:
+  - "npm run coveralls"

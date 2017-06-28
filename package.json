@@ -1,11 +1,25 @@
 {
   "name": "gulp-postcss",
+  "nyc": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 97,
+    "reporter": [
+      "lcov",
+      "text"
+    ],
+    "cache": true,
+    "all": true,
+    "check-coverage": true
+  },
   "version": "7.0.0",
   "description": "PostCSS gulp plugin",
   "main": "index.js",
   "scripts": {
+    "coveralls": "coveralls < coverage/lcov.info",
     "pretest": "eslint index.js",
-    "test": "mocha test.js"
+    "test": "nyc mocha test.js"
   },
   "repository": {
     "type": "git",
@@ -30,11 +44,12 @@
     "vinyl-sourcemaps-apply": "^0.2.1"
   },
   "devDependencies": {
-    "eslint": "^3.19.0",
+    "coveralls": "^2.13.1",
+    "eslint": "^4.1.1",
     "gulp-sourcemaps": "^2.6.0",
-    "mocha": "^3.3.0",
-    "proxyquire": "^1.7.11",
-    "sinon": "^2.2.0"
-  },
-  "files": []
+    "mocha": "^3.4.2",
+    "nyc": "^11.0.3",
+    "proxyquire": "^1.8.0",
+    "sinon": "^2.3.5"
+  }
 }
