@@ -4,7 +4,7 @@
     "lines": 100,
     "statements": 100,
     "functions": 100,
-    "branches": 97,
+    "branches": 100,
     "reporter": [
       "lcov",
       "text"
@@ -18,7 +18,7 @@
   "main": "index.js",
   "scripts": {
     "coveralls": "coveralls < coverage/lcov.info",
-    "pretest": "eslint index.js",
+    "pretest": "eslint *.js",
     "test": "nyc mocha test.js"
   },
   "repository": {

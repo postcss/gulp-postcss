@@ -25,10 +25,10 @@ module.exports = withConfigLoader(function (loadConfig) {
       : {}
 
     var options = {
-      from: file.path
-    , to: file.path
+      from: file.path,
+      to: file.path,
       // Generate a separate source map for gulp-sourcemaps
-    , map: file.sourceMap ? { annotation: false } : false
+      map: file.sourceMap ? { annotation: false } : false
     }
 
     loadConfig(file)
@@ -104,8 +104,8 @@ function withConfigLoader(cb) {
     if (Array.isArray(plugins)) {
       return cb(function () {
         return Promise.resolve({
-          plugins: plugins
-        , options: options
+          plugins: plugins,
+          options: options
         })
       })
     } else if (typeof plugins === 'function') {
@@ -127,8 +127,9 @@ function withConfigLoader(cb) {
           configPath = file.dirname
         }
         return postcssLoadConfig(
-          { file: file
-          , options: contextOptions
+          {
+            file: file,
+            options: contextOptions
           },
           configPath
         )

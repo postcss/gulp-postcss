@@ -25,10 +25,7 @@
         "SwitchCase": 1
       }
     ],
-    "comma-style": [
-      2,
-      "first"
-    ],
+    "comma-style": 2,
     "max-len": [
       2,
       {
