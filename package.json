@@ -47,7 +47,6 @@
   "homepage": "https://github.com/StartPolymer/gulp-html-postcss",
   "dependencies": {
     "bufferstreams": "^1.1.1",
-    "coveralls": "^2.13.1",
     "gulp-util": "^3.0.8",
     "postcss": "^6.0.0",
     "postcss-html": "^0.7.0",
@@ -63,6 +62,7 @@
     "sugarss": "^1.0.0"
   },
   "devDependencies": {
+    "coveralls": "^2.13.1",
     "eslint": "^4.1.1",
     "from2-array": "0.0.4",
     "gulp-rename": "^1.2.2",
