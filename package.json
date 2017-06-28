@@ -1,39 +1,76 @@
 {
-  "name": "gulp-postcss",
-  "version": "7.0.0",
-  "description": "PostCSS gulp plugin",
-  "main": "index.js",
+  "name": "gulp-html-postcss",
+  "nyc": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 100,
+    "include": [
+      "lib/**/*.js"
+    ],
+    "reporter": [
+      "lcov",
+      "text"
+    ],
+    "cache": true,
+    "all": true,
+    "check-coverage": true
+  },
+  "version": "6.0.1",
+  "description": "Process inline CSS in HTML using PostCSS gulp plugin",
+  "main": "lib/index.js",
   "scripts": {
+    "coveralls": "coveralls < coverage/lcov.info",
     "pretest": "eslint index.js",
-    "test": "mocha test.js"
+    "test": "nyc mocha"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/postcss/gulp-postcss.git"
+    "url": "https://github.com/StartPolymer/gulp-html-postcss.git"
   },
   "keywords": [
     "gulpplugin",
     "postcss",
     "postcss-runner",
-    "css"
+    "css",
+    "html",
+    "vue"
   ],
-  "author": "Andrey Kuzmin <unsoundscapes@gmail.com>",
+  "author": "Start Polymer Authors (http://startpolymer.org/AUTHORS.txt)",
+  "contributors": [
+    "Andrey Kuzmin <unsoundscapes@gmail.com>"
+  ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/postcss/gulp-postcss/issues"
+    "url": "https://github.com/StartPolymer/gulp-html-postcss/issues"
   },
-  "homepage": "https://github.com/postcss/gulp-postcss",
+  "homepage": "https://github.com/StartPolymer/gulp-html-postcss",
   "dependencies": {
+    "bufferstreams": "^1.1.1",
+    "coveralls": "^2.13.1",
     "gulp-util": "^3.0.8",
     "postcss": "^6.0.0",
+    "postcss-html": "^0.4.0",
     "postcss-load-config": "^1.2.0",
+    "postcss-load-options": "^1.2.0",
+    "postcss-load-plugins": "^2.3.0",
     "vinyl-sourcemaps-apply": "^0.2.1"
+  },
+  "peerDependencies": {
+    "postcss-less": "^1.0.0",
+    "postcss-sass": "^0.1.0",
+    "postcss-scss": "^1.0.0",
+    "sugarss": "^1.0.0"
   },
   "devDependencies": {
     "eslint": "^3.19.0",
+    "from2-array": "0.0.4",
+    "gulp-rename": "^1.2.2",
     "gulp-sourcemaps": "^2.6.0",
-    "mocha": "^3.3.0",
-    "proxyquire": "^1.7.11",
-    "sinon": "^2.2.0"
+    "mocha": "^3.4.2",
+    "nyc": "^11.0.1",
+    "postcss-less": "^1.0.1",
+    "proxyquire": "^1.8.0",
+    "sinon": "^2.3.2"
   }
 }
