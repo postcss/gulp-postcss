@@ -1,9 +1,11 @@
 # gulp-html-postcss
 
+[![NPM version](https://img.shields.io/npm/v/gulp-html-postcss.svg?style=flat-square)](https://www.npmjs.com/package/gulp-html-postcss)
+[![Build Status](https://img.shields.io/travis/StartPolymer/gulp-html-postcss.png)](https://travis-ci.org/StartPolymer/gulp-html-postcss)
+[![Coverage Status](https://img.shields.io/coveralls/StartPolymer/gulp-html-postcss.png)](https://coveralls.io/r/StartPolymer/gulp-html-postcss)
+
 [PostCSS](https://github.com/postcss/postcss) gulp plugin to pipe inline CSS in HTML within the `<style>` tags through
 several plugins, but parse CSS only once.
-
-[![NPM version](https://img.shields.io/npm/v/gulp-html-postcss.svg?style=flat-square)](https://www.npmjs.com/package/gulp-html-postcss)
 
 ## Install
 
