@@ -72,6 +72,5 @@
     "postcss-less": "^1.0.2",
     "proxyquire": "^1.8.0",
     "sinon": "^2.3.6"
-  },
-  "files": []
+  }
 }
