@@ -5,9 +5,6 @@
     "statements": 100,
     "functions": 100,
     "branches": 100,
-    "include": [
-      "lib/**/*.js"
-    ],
     "reporter": [
       "lcov",
       "text"
@@ -21,7 +18,7 @@
   "main": "lib/index.js",
   "scripts": {
     "coveralls": "coveralls < coverage/lcov.info",
-    "pretest": "eslint index.js",
+    "pretest": "eslint lib test",
     "test": "nyc mocha"
   },
   "repository": {
