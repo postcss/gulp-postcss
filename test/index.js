@@ -29,8 +29,8 @@ it('should pass file when it isNull()', function (cb) {
 it('should transform css with multiple processors', function (cb) {
 
 	const stream = postcss(
-    [ asyncDoubler, objectDoubler() ]
-  );
+		[ asyncDoubler, objectDoubler() ]
+	);
 
 	stream.on('data', function (file) {
 		const result = file.contents.toString('utf8');
@@ -99,12 +99,12 @@ it('should generate source maps', function (cb) {
 	const init = sourceMaps.init();
 	const write = sourceMaps.write();
 	const css = postcss(
-    [ doubler, asyncDoubler ]
-  );
+		[ doubler, asyncDoubler ]
+	);
 
 	init
-    .pipe(css)
-    .pipe(write);
+		.pipe(css)
+		.pipe(write);
 
 	write.on('data', function (file) {
 		assert.equal(file.sourceMap.mappings, 'AAAA,IAAI,aAAY,CAAZ,aAAY,CAAZ,aAAY,CAAZ,YAAY,EAAE');
@@ -127,8 +127,8 @@ it('should correctly generate relative source map', function (cb) {
 
 	const init = sourceMaps.init();
 	const css = postcss(
-    [ doubler, doubler ]
-  );
+		[ doubler, doubler ]
+	);
 
 	init.pipe(css);
 
@@ -528,8 +528,8 @@ describe('<style> tag', function () {
 		}
 
 		const stream = postcss(
-      [ asyncDoubler, objectDoubler() ]
-    );
+			[ asyncDoubler, objectDoubler() ]
+		);
 
 		stream.on('data', function (file) {
 			const result = file.contents.toString('utf8');
@@ -552,8 +552,8 @@ describe('<style> tag', function () {
 		}
 
 		const stream = postcss(
-      [ asyncDoubler, objectDoubler() ]
-    );
+			[ asyncDoubler, objectDoubler() ]
+		);
 
 		stream.on('data', function (file) {
 			const result = file.contents.toString('utf8');
