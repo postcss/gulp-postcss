@@ -20,14 +20,14 @@ as [described here](https://www.npmjs.com/package/postcss-load-config),
 so you don't have to specify any options.
 
 ```js
-var postcss = require('gulp-postcss');
-var gulp = require('gulp');
+const postcss = require('gulp-postcss');
+const gulp = require('gulp');
 
-gulp.task('css', function () {
-    return gulp.src('./src/*.css')
+gulp.task('css', () => (
+    gulp.src('./src/*.css')
         .pipe(postcss())
-        .pipe(gulp.dest('./dest'));
-});
+        .pipe(gulp.dest('./dest'))
+));
 ```
 
 ## Advanced usage
@@ -40,25 +40,24 @@ that receives `ctx` with the context options and the [vinyl file](https://github
 [Described here](https://www.npmjs.com/package/postcss-load-config#postcssconfigjs-or-postcssrcjs),
 
 ```js
-var gulp = require('gulp');
-var postcss = require('gulp-postcss');
-var reporter = require('gulp-reporter');
-var autoprefixer = require('autoprefixer');
-var cssnano = require('cssnano');
-var sugarss = require('sugarss');
+const gulp = require('gulp');
+const postcss = require('gulp-postcss');
+const reporter = require('gulp-reporter');
+const autoprefixer = require('autoprefixer');
+const cssnano = require('cssnano');
+const sugarss = require('sugarss');
 
-gulp.task('css', function () {
-    function callback(ctx) {
-        return {
-            // Configure parser on per-file-basis.
-            parser: ctx.file.extname === '.sss' ? 'sugarss' : false,
-            // Plugins can be loaded in either using an {Object} or an {Array}.
-            plugins: [
-                autoprefixer,
-                cssnano
-            ]
-        };
-    }
+gulp.task('css', () => {
+    const callback = (ctx) => ({
+        // Configure parser on per-file-basis.
+        parser: ctx.file.extname === '.sss' ? 'sugarss' : false,
+        // Plugins can be loaded in either using an {Object} or an {Array}.
+        plugins: [
+            autoprefixer,
+            cssnano
+        ]
+    });
+
     return gulp.src('./src/*.css', {
         // Source map support
         sourcemaps: true
