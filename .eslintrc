@@ -11,10 +11,6 @@
   "root": true,
   "rules": {
     "block-spacing": "error",
-    "comma-style": [
-      "error",
-      "first"
-    ],
     "indent": [
       "error",
       2,
