@@ -227,8 +227,8 @@ describe('PostCSS Guidelines', function () {
       extname: '.css'
     })
     var stream = postcss([ doubler ])
-    var mdPath = path.join(__dirname, '/src/fixture.md')
-    var cssPath = path.join(__dirname, '/src/fixture.css')
+    var mdPath = path.join(__dirname, 'src/fixture.md')
+    var cssPath = path.join(__dirname, 'src/fixture.css')
     postcssStub.process.returns(Promise.resolve({
       css: '',
       warnings: function () {
