@@ -24,7 +24,7 @@ const postcss = require('gulp-postcss');
 const gulp = require('gulp');
 
 gulp.task('css', () => (
-    gulp.src('./src/*.css')
+    gulp.src('./src/*.html')
         .pipe(postcss())
         .pipe(gulp.dest('./dest'))
 ));
@@ -58,7 +58,7 @@ gulp.task('css', () => {
         ]
     });
 
-    return gulp.src('./src/*.css', {
+    return gulp.src('./src/*.html', {
         // Source map support
         sourcemaps: true
     })
