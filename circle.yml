@@ -1,0 +1,3 @@
+dependencies:
+  pre:
+    - npm i npm@latest -g
