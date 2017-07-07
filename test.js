@@ -1,5 +1,4 @@
 /* eslint-env node, mocha */
-/* eslint comma-style: ["error", "last"] */
 /* eslint max-len: ["off"] */
 
 var assert = require('assert')
@@ -47,6 +46,28 @@ it('should transform css with multiple processors', function (cb) {
 
 })
 
+it('should not transform css with out any processor', function (cb) {
+
+  var css = 'a { color: black }'
+
+  var stream = postcss(function(){
+    return {}
+  })
+
+  stream.on('data', function (file) {
+    var result = file.contents.toString('utf8')
+    var target = css
+    assert.equal( result, target )
+    cb()
+  })
+
+  stream.write(new gutil.File({
+    contents: new Buffer(css)
+  }))
+
+  stream.end()
+
+})
 
 it('should correctly wrap postcss errors', function (cb) {
 
