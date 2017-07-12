@@ -45,18 +45,14 @@
   "dependencies": {
     "bufferstreams": "^1.1.1",
     "gulp-util": "^3.0.8",
-    "postcss-html": "^0.7.0",
+    "postcss-html": "^0.8.0",
     "postcss-load-config": "^1.2.0",
     "postcss-load-options": "^1.2.0",
     "postcss-load-plugins": "^2.3.0",
     "vinyl-sourcemaps-apply": "^0.2.1"
   },
   "peerDependencies": {
-    "postcss": ">=6.0.0",
-    "postcss-less": ">=1.1.0",
-    "postcss-sass": ">=0.2.0",
-    "postcss-scss": ">=1.0.0",
-    "sugarss": ">=1.0.0"
+    "postcss": ">=6.0.0"
   },
   "devDependencies": {
     "coveralls": "^2.13.1",
