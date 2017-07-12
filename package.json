@@ -13,7 +13,7 @@
     "all": true,
     "check-coverage": true
   },
-  "version": "7.0.0",
+  "version": "7.0.1",
   "description": "Process inline CSS in HTML using PostCSS gulp plugin",
   "main": "lib/index.js",
   "scripts": {
