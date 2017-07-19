@@ -20,7 +20,7 @@ as [described here](https://www.npmjs.com/package/postcss-load-config),
 so you don't have to specify any options.
 
 ```js
-const postcss = require('gulp-postcss');
+const postcss = require('gulp-html-postcss');
 const gulp = require('gulp');
 
 gulp.task('css', () => (
