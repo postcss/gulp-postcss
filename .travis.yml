@@ -1,11 +1,15 @@
+dist: trusty
 sudo: false
 language: node_js
+
 node_js:
   - stable
   - 6
   - 4
-before_install:
-  - npm i npm@latest -g
 
-after_success:
+before_install:
+  - npm i check-node-version -g
+  - check-node-version --node '>= 9' || npm i npm@latest -g
+
+after_script:
   - npm run coveralls
