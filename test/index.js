@@ -9,7 +9,6 @@ const postcss = require('../');
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
 const path = require('path');
-const syntax = require('postcss-html');
 const from = require('from2-array');
 
 it('should pass file when it isNull()', function (cb) {
@@ -209,7 +208,7 @@ describe('PostCSS Guidelines', function () {
 		this.showSourceCode = function () {
 			return this.source;
 		};
-		this.toString = function(){
+		this.toString = function() {
 			let code = this.showSourceCode();
 			if ( code ) {
 				code = '\n\n' + code + '\n';
@@ -331,19 +330,23 @@ describe('PostCSS Guidelines', function () {
 		}));
 
 		stream.on('data', function () {
-			assert.deepEqual(callback.getCall(0).args[0], {
-				cwd: process.cwd(),
-				from: cssPath,
-				file: file,
-				map: false,
-				syntax: syntax,
-				to: 'overriden',
-			});
-			assert.deepEqual(postcssStub.use.getCall(0).args[0], plugins);
-			assert.equal(postcssStub.process.getCall(0).args[1].to, 'overriden');
-			cb();
+			try {
+				assert.deepEqual(callback.getCall(0).args[0], {
+					cwd: process.cwd(),
+					from: cssPath,
+					file: file,
+					map: false,
+					to: 'overriden',
+				});
+				assert.deepEqual(postcssStub.use.getCall(0).args[0], plugins);
+				assert.equal(postcssStub.process.getCall(0).args[1].to, 'overriden');
+				cb();
+			} catch (ex) {
+				cb(ex);
+			}
 		});
 
+		stream.on('error', cb);
 		stream.end(file);
 
 	});
@@ -376,7 +379,6 @@ describe('PostCSS Guidelines', function () {
 				from: cssPath,
 				file: file,
 				map: false,
-				syntax: syntax,
 				to: cssPath,
 			});
 			assert.equal(postcssStub.use.getCall(0).args[0], plugins);
@@ -522,8 +524,8 @@ describe('PostCSS Guidelines', function () {
 
 describe('<style> tag', function () {
 
-	it('less in html', function (cb) {
-		function createHtml(css){
+	it('LESS in HTML', function (cb) {
+		function createHtml(css) {
 			return '<html><head><style type="text/less">' + css + '</style></head></html>';
 		}
 
@@ -542,6 +544,58 @@ describe('<style> tag', function () {
 			contents: new Buffer(createHtml('a { color: black }')),
 		}));
 
+		stream.on('error', cb);
+		stream.end();
+	});
+
+	it('HTML without <style> tag', function(cb) {
+		const html = '<html><body></body></html>';
+
+		const stream = postcss(
+			[ asyncDoubler, objectDoubler() ]
+		);
+
+		stream.on('data', function (file) {
+			const result = file.contents.toString('utf8');
+			try {
+				assert.equal( result, html );
+				cb();
+			} catch (error) {
+				cb(error);
+			}
+		});
+
+		stream.write(new gutil.File({
+			contents: new Buffer(html),
+		}));
+
+		stream.on('error', cb);
+		stream.end();
+	});
+
+	it('remove nodes from root', function (cb) {
+		function createHtml(css) {
+			return '<html><head><style>' + css + '</style></head></html>';
+		}
+
+		const stream = postcss([
+			function (root) {
+				root.nodes = [];
+			},
+		]);
+
+		stream.on('data', function (file) {
+			const result = file.contents.toString('utf8');
+			const target = createHtml('');
+			assert.equal( result, target );
+			cb();
+		});
+
+		stream.write(new gutil.File({
+			contents: new Buffer(createHtml('a { color: black }')),
+		}));
+
+		stream.on('error', cb);
 		stream.end();
 	});
 
@@ -566,6 +620,7 @@ describe('<style> tag', function () {
 			contents: new Buffer(createVue('a { color: black }')),
 		}));
 
+		stream.on('error', cb);
 		stream.end();
 	});
 
