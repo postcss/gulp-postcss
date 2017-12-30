@@ -1,7 +1,8 @@
 var Stream = require('stream')
 var postcss = require('postcss')
 var applySourceMap = require('vinyl-sourcemaps-apply')
-var gutil = require('gulp-util')
+var fancyLog = require('fancy-log')
+var PluginError = require('plugin-error')
 var path = require('path')
 
 
@@ -39,7 +40,7 @@ module.exports = withConfigLoader(function (loadConfig) {
           if (configOpts.hasOwnProperty(opt) && !isProtected[opt]) {
             options[opt] = configOpts[opt]
           } else {
-            gutil.log(
+            fancyLog.info(
               'gulp-postcss:',
               file.relative + '\nCannot override ' + opt +
               ' option, because it is required by gulp-sourcemaps'
@@ -68,7 +69,7 @@ module.exports = withConfigLoader(function (loadConfig) {
       }
 
       if (warnings) {
-        gutil.log('gulp-postcss:', file.relative + '\n' + warnings)
+        fancyLog.info('gulp-postcss:', file.relative + '\n' + warnings)
       }
 
       setImmediate(function () {
@@ -89,7 +90,7 @@ module.exports = withConfigLoader(function (loadConfig) {
       // Prevent stream’s unhandled exception from
       // being suppressed by Promise
       setImmediate(function () {
-        cb(new gutil.PluginError('gulp-postcss', error, errorOptions))
+        cb(new PluginError('gulp-postcss', error, errorOptions))
       })
     }
 
