@@ -2,7 +2,9 @@
 /* eslint max-len: ["off"] */
 
 var assert = require('assert')
-var gutil = require('gulp-util')
+var Vinyl = require('vinyl')
+var fancyLog = require('fancy-log')
+var PluginError = require('plugin-error')
 var sourceMaps = require('gulp-sourcemaps')
 var postcss = require('./index')
 var proxyquire = require('proxyquire')
@@ -38,7 +40,7 @@ it('should transform css with multiple processors', function (cb) {
     cb()
   })
 
-  stream.write(new gutil.File({
+  stream.write(new Vinyl({
     contents: new Buffer('a { color: black }')
   }))
 
@@ -61,7 +63,7 @@ it('should not transform css with out any processor', function (cb) {
     cb()
   })
 
-  stream.write(new gutil.File({
+  stream.write(new Vinyl({
     contents: new Buffer(css)
   }))
 
@@ -74,7 +76,7 @@ it('should correctly wrap postcss errors', function (cb) {
   var stream = postcss([ doubler ])
 
   stream.on('error', function (err) {
-    assert.ok(err instanceof gutil.PluginError)
+    assert.ok(err instanceof PluginError)
     assert.equal(err.plugin, 'gulp-postcss')
     assert.equal(err.column, 1)
     assert.equal(err.lineNumber, 1)
@@ -86,7 +88,7 @@ it('should correctly wrap postcss errors', function (cb) {
     cb()
   })
 
-  stream.write(new gutil.File({
+  stream.write(new Vinyl({
     contents: new Buffer('a {'),
     path: path.resolve('testpath')
   }))
@@ -100,7 +102,7 @@ it('should respond with error on stream files', function (cb) {
   var stream = postcss([ doubler ])
 
   stream.on('error', function (err) {
-    assert.ok(err instanceof gutil.PluginError)
+    assert.ok(err instanceof PluginError)
     assert.equal(err.plugin, 'gulp-postcss')
     assert.equal(err.showStack, true)
     assert.equal(err.message, 'Streams are not supported!')
@@ -138,7 +140,7 @@ it('should generate source maps', function (cb) {
     cb()
   })
 
-  init.write(new gutil.File({
+  init.write(new Vinyl({
     base: __dirname,
     path: __dirname + '/fixture.css',
     contents: new Buffer('a { color: black }')
@@ -164,7 +166,7 @@ it('should correctly generate relative source map', function (cb) {
     cb()
   })
 
-  init.write(new gutil.File({
+  init.write(new Vinyl({
     base: __dirname + '/src',
     path: __dirname + '/src/fixture.css',
     contents: new Buffer('a { color: black }')
@@ -238,7 +240,7 @@ describe('PostCSS Guidelines', function () {
       cb()
     })
 
-    stream.write(new gutil.File({
+    stream.write(new Vinyl({
       contents: new Buffer('a {}'),
       path: cssPath
     }))
@@ -262,7 +264,7 @@ describe('PostCSS Guidelines', function () {
       cb()
     })
 
-    stream.write(new gutil.File({
+    stream.write(new Vinyl({
       contents: new Buffer('a {}')
     }))
 
@@ -273,7 +275,7 @@ describe('PostCSS Guidelines', function () {
   it('should take plugins and options from callback', function (cb) {
 
     var cssPath = __dirname + '/fixture.css'
-    var file = new gutil.File({
+    var file = new Vinyl({
       contents: new Buffer('a {}'),
       path: cssPath
     })
@@ -305,7 +307,7 @@ describe('PostCSS Guidelines', function () {
   it('should take plugins and options from postcss-load-config', function (cb) {
 
     var cssPath = __dirname + '/fixture.css'
-    var file = new gutil.File({
+    var file = new Vinyl({
       contents: new Buffer('a {}'),
       path: cssPath
     })
@@ -352,7 +354,7 @@ describe('PostCSS Guidelines', function () {
       assert.deepEqual(postcssLoadConfigStub.getCall(0).args[1], __dirname)
       cb()
     })
-    stream.end(new gutil.File({
+    stream.end(new Vinyl({
       contents: new Buffer('a {}'),
       path: cssPath
     }))
@@ -372,7 +374,7 @@ describe('PostCSS Guidelines', function () {
       assert.deepEqual(postcssLoadConfigStub.getCall(0).args[1], '/absolute/path')
       cb()
     })
-    stream.end(new gutil.File({
+    stream.end(new Vinyl({
       contents: new Buffer('a {}'),
       path: cssPath
     }))
@@ -392,7 +394,7 @@ describe('PostCSS Guidelines', function () {
       assert.deepEqual(postcssLoadConfigStub.getCall(0).args[1], path.join(__dirname, 'relative/path'))
       cb()
     })
-    stream.end(new gutil.File({
+    stream.end(new Vinyl({
       contents: new Buffer('a {}'),
       path: cssPath,
       base: __dirname
@@ -417,19 +419,19 @@ describe('PostCSS Guidelines', function () {
       }
     }))
 
-    sandbox.stub(gutil, 'log')
+    sandbox.stub(fancyLog, 'info')
 
     stream.on('data', function () {
       assert.deepEqual(postcssStub.process.getCall(0).args[1].from, cssPath)
       assert.deepEqual(postcssStub.process.getCall(0).args[1].map, { annotation: false })
-      var firstMessage = gutil.log.getCall(0).args[1]
-      var secondMessage = gutil.log.getCall(1).args[1]
+      var firstMessage = fancyLog.info.getCall(0).args[1]
+      var secondMessage = fancyLog.info.getCall(1).args[1]
       assert(firstMessage, '/fixture.css\nCannot override from option, because it is required by gulp-sourcemaps')
       assert(secondMessage, '/fixture.css\nCannot override map option, because it is required by gulp-sourcemaps')
       cb()
     })
 
-    var file = new gutil.File({
+    var file = new Vinyl({
       contents: new Buffer('a {}'),
       path: cssPath
     })
@@ -450,7 +452,7 @@ describe('PostCSS Guidelines', function () {
       cb()
     })
 
-    stream.write(new gutil.File({
+    stream.write(new Vinyl({
       contents: new Buffer('a {}')
     }))
 
@@ -469,7 +471,7 @@ describe('PostCSS Guidelines', function () {
       }
     }
 
-    sandbox.stub(gutil, 'log')
+    sandbox.stub(fancyLog, 'info')
     postcssStub.process.returns(Promise.resolve({
       css: '',
       warnings: function () {
@@ -478,11 +480,11 @@ describe('PostCSS Guidelines', function () {
     }))
 
     stream.on('data', function () {
-      assert(gutil.log.calledWith('gulp-postcss:', 'src' +  path.sep + 'fixture.css\nmsg1\nmsg2'))
+      assert(fancyLog.info.calledWith('gulp-postcss:', 'src' +  path.sep + 'fixture.css\nmsg1\nmsg2'))
       cb()
     })
 
-    stream.write(new gutil.File({
+    stream.write(new Vinyl({
       contents: new Buffer('a {}'),
       path: cssPath
     }))
@@ -517,7 +519,7 @@ describe('PostCSS Guidelines', function () {
       cb()
     })
 
-    stream.write(new gutil.File({
+    stream.write(new Vinyl({
       contents: new Buffer('a {}'),
       path: cssPath
     }))
