@@ -3,7 +3,8 @@
 /* eslint max-len: ["off"] */
 
 const assert = require('assert');
-const gutil = require('gulp-util');
+const PluginError = require('plugin-error');
+const Vinyl = require('vinyl');
 const sourceMaps = require('gulp-sourcemaps');
 const postcss = require('../');
 const proxyquire = require('proxyquire');
@@ -13,7 +14,7 @@ const from = require('from2-array');
 
 it('should pass file when it isNull()', function (cb) {
 	const stream = postcss([ doubler ]);
-	const emptyFile = new gutil.File();
+	const emptyFile = new Vinyl();
 
 	stream.once('data', function (data) {
 		assert.equal(data, emptyFile);
@@ -37,7 +38,7 @@ it('should transform css with multiple processors', function (cb) {
 		cb();
 	});
 
-	stream.write(new gutil.File({
+	stream.write(new Vinyl({
 		contents: Buffer.from('a { color: black }'),
 	}));
 
@@ -48,7 +49,7 @@ it('should correctly wrap postcss errors', function (cb) {
 	const stream = postcss([ doubler ]);
 
 	stream.on('error', function (err) {
-		assert.ok(err instanceof gutil.PluginError);
+		assert.ok(err instanceof PluginError);
 		assert.equal(err.plugin, 'gulp-postcss');
 		assert.equal(err.column, 1);
 		assert.equal(err.lineNumber, 1);
@@ -60,7 +61,7 @@ it('should correctly wrap postcss errors', function (cb) {
 		cb();
 	});
 
-	stream.write(new gutil.File({
+	stream.write(new Vinyl({
 		contents: Buffer.from('a {'),
 		path: path.resolve('testpath'),
 	}));
@@ -76,7 +77,7 @@ it('should transform css on stream files', function (cb) {
 		cb();
 	});
 
-	const streamFile = new gutil.File({
+	const streamFile = new Vinyl({
 		contents: from([Buffer.from('.from {}')]),
 		path: path.resolve('testpath'),
 	});
@@ -103,7 +104,7 @@ it('should generate source maps', function (cb) {
 		cb();
 	});
 
-	init.write(new gutil.File({
+	init.write(new Vinyl({
 		base: __dirname,
 		path: path.join(__dirname, 'fixture.css'),
 		contents: Buffer.from('a { color: black }'),
@@ -126,7 +127,7 @@ it('should correctly generate relative source map', function (cb) {
 		cb();
 	});
 
-	init.write(new gutil.File({
+	init.write(new Vinyl({
 		base: path.join(__dirname, 'src'),
 		path: path.join(__dirname, 'src/fixture.css'),
 		contents: Buffer.from('a { color: black }'),
@@ -158,7 +159,7 @@ describe('PostCSS Syntax Infer', function () {
 			cb();
 		});
 
-		stream.write(new gutil.File({
+		stream.write(new Vinyl({
 			base: path.join(__dirname, 'src'),
 			path: path.join(__dirname, 'src/fixture.less'),
 			contents: Buffer.from(less.join('\n')),
@@ -176,7 +177,7 @@ describe('PostCSS Syntax Infer', function () {
 			cb();
 		});
 
-		stream.write(new gutil.File({
+		stream.write(new Vinyl({
 			base: path.join(__dirname, 'src'),
 			path: path.join(__dirname, 'src/fixture.sass'),
 			contents: Buffer.from('a {'),
@@ -259,7 +260,7 @@ describe('PostCSS Guidelines', function () {
 			cb();
 		});
 
-		rename.write(new gutil.File({
+		rename.write(new Vinyl({
 			contents: Buffer.from('a {}'),
 			path: mdPath,
 		}));
@@ -284,7 +285,7 @@ describe('PostCSS Guidelines', function () {
 			cb();
 		});
 
-		stream.write(new gutil.File({
+		stream.write(new Vinyl({
 			contents: Buffer.from('a {}'),
 		}));
 
@@ -293,7 +294,7 @@ describe('PostCSS Guidelines', function () {
 
 	it('should take plugins and options from callback', function (cb) {
 		const cssPath = path.join(__dirname, 'fixture.css');
-		const file = new gutil.File({
+		const file = new Vinyl({
 			contents: Buffer.from('a {}'),
 			path: cssPath,
 		});
@@ -334,7 +335,7 @@ describe('PostCSS Guidelines', function () {
 
 	it('should take plugins and options from postcss-load-config', function (cb) {
 		const cssPath = path.join(__dirname, 'fixture.css');
-		const file = new gutil.File({
+		const file = new Vinyl({
 			contents: Buffer.from('a {}'),
 			path: cssPath,
 		});
@@ -383,7 +384,7 @@ describe('PostCSS Guidelines', function () {
 			assert.deepEqual(postcssLoadConfigStub.getCall(0).args[1], cssPath);
 			cb();
 		});
-		stream.end(new gutil.File({
+		stream.end(new Vinyl({
 			contents: Buffer.from('a {}'),
 			path: cssPath,
 		}));
@@ -403,7 +404,7 @@ describe('PostCSS Guidelines', function () {
 			assert.deepEqual(postcssLoadConfigStub.getCall(0).args[1], cssPath);
 			cb();
 		});
-		stream.end(new gutil.File({
+		stream.end(new Vinyl({
 			contents: Buffer.from('a {}'),
 			path: cssPath,
 		}));
@@ -427,15 +428,20 @@ describe('PostCSS Guidelines', function () {
 			},
 		}));
 
-		sandbox.stub(gutil, 'log');
+		// sandbox.stub(gutil, 'log');
 
 		stream.on('data', function () {
-			assert.deepEqual(postcssStub.process.getCall(0).args[1].from, cssPath);
-			assert.deepEqual(postcssStub.process.getCall(0).args[1].map, { annotation: false });
+			try {
+				assert.deepEqual(postcssStub.process.getCall(0).args[1].from, cssPath);
+				assert.deepEqual(postcssStub.process.getCall(0).args[1].map, { annotation: false });
+			} catch (ex) {
+				cb(ex);
+				return;
+			}
 			cb();
 		});
 
-		const file = new gutil.File({
+		const file = new Vinyl({
 			contents: Buffer.from('a {}'),
 			path: cssPath,
 		});
@@ -455,7 +461,7 @@ describe('PostCSS Guidelines', function () {
 			cb();
 		});
 
-		stream.write(new gutil.File({
+		stream.write(new Vinyl({
 			contents: Buffer.from('a {}'),
 		}));
 
@@ -471,7 +477,7 @@ describe('PostCSS Guidelines', function () {
 			};
 		}
 
-		sandbox.stub(gutil, 'log');
+		// sandbox.stub(gutil, 'log');
 		postcssStub.process.returns(Promise.resolve({
 			content: '',
 			warnings: function () {
@@ -486,7 +492,7 @@ describe('PostCSS Guidelines', function () {
 			cb();
 		});
 
-		stream.write(new gutil.File({
+		stream.write(new Vinyl({
 			contents: Buffer.from('a {}'),
 			path: cssPath,
 		}));
@@ -512,7 +518,7 @@ describe('<style> tag', function () {
 			cb();
 		});
 
-		stream.write(new gutil.File({
+		stream.write(new Vinyl({
 			contents: Buffer.from(createHtml('a { color: black }')),
 		}));
 
@@ -537,7 +543,7 @@ describe('<style> tag', function () {
 			}
 		});
 
-		stream.write(new gutil.File({
+		stream.write(new Vinyl({
 			contents: Buffer.from(html),
 		}));
 
@@ -563,7 +569,7 @@ describe('<style> tag', function () {
 			cb();
 		});
 
-		stream.write(new gutil.File({
+		stream.write(new Vinyl({
 			contents: Buffer.from(createHtml('a { color: black }')),
 		}));
 
@@ -587,7 +593,7 @@ describe('<style> tag', function () {
 			cb();
 		});
 
-		stream.write(new gutil.File({
+		stream.write(new Vinyl({
 			contents: Buffer.from(createVue('a { color: black }')),
 		}));
 
