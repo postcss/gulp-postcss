@@ -56,7 +56,12 @@
   },
   "devDependencies": {
     "coveralls": "^3.0.0",
-    "eslint": "^4.11.0",
+    "eslint": "^4.14.0",
+    "eslint-config-standard": "^11.0.0-beta.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-node": "^5.2.1",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-standard": "^3.0.1",
     "from2-array": "0.0.4",
     "gulp-rename": "^1.2.2",
     "gulp-sourcemaps": "^2.6.1",

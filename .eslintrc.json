@@ -1,10 +1,13 @@
 {
+  "parserOptions": {
+    "sourceType": "script"
+  },
   "env": {
     "es6": true,
     "node": true
   },
   "extends": [
-    "eslint:recommended"
+    "standard"
   ],
   "root": true,
   "rules": {
@@ -51,6 +54,7 @@
     "new-cap": "error",
     "no-cond-assign": "error",
     "no-multi-spaces": "error",
+    "no-tabs": "off",
     "no-trailing-spaces": "error",
     "no-undef": "error",
     "no-unused-expressions": "error",
@@ -62,7 +66,8 @@
       "single"
     ],
     "semi": [
-      "error"
+      "error",
+      "always"
     ],
     "spaced-comment": "error",
     "strict": "error"

@@ -26,7 +26,6 @@ it('should pass file when it isNull()', function (cb) {
 });
 
 it('should transform css with multiple processors', function (cb) {
-
 	const stream = postcss(
 		[ asyncDoubler, objectDoubler() ]
 	);
@@ -34,21 +33,18 @@ it('should transform css with multiple processors', function (cb) {
 	stream.on('data', function (file) {
 		const result = file.contents.toString('utf8');
 		const target = 'a { color: black; color: black; color: black; color: black }';
-		assert.equal( result, target );
+		assert.equal(result, target);
 		cb();
 	});
 
 	stream.write(new gutil.File({
-		contents: new Buffer('a { color: black }'),
+		contents: Buffer.from('a { color: black }'),
 	}));
 
 	stream.end();
-
 });
 
-
 it('should correctly wrap postcss errors', function (cb) {
-
 	const stream = postcss([ doubler ]);
 
 	stream.on('error', function (err) {
@@ -65,16 +61,14 @@ it('should correctly wrap postcss errors', function (cb) {
 	});
 
 	stream.write(new gutil.File({
-		contents: new Buffer('a {'),
+		contents: Buffer.from('a {'),
 		path: path.resolve('testpath'),
 	}));
 
 	stream.end();
-
 });
 
 it('should transform css on stream files', function (cb) {
-
 	const stream = postcss([ doubler ]);
 
 	stream.on('data', function (file) {
@@ -83,18 +77,16 @@ it('should transform css on stream files', function (cb) {
 	});
 
 	const streamFile = new gutil.File({
-		contents: from([new Buffer('.from {}')]),
+		contents: from([Buffer.from('.from {}')]),
 		path: path.resolve('testpath'),
 	});
 
 	stream.write(streamFile);
 
 	stream.end();
-
 });
 
 it('should generate source maps', function (cb) {
-
 	const init = sourceMaps.init();
 	const write = sourceMaps.write();
 	const css = postcss(
@@ -113,17 +105,14 @@ it('should generate source maps', function (cb) {
 
 	init.write(new gutil.File({
 		base: __dirname,
-		path: __dirname + '/fixture.css',
-		contents: new Buffer('a { color: black }'),
+		path: path.join(__dirname, 'fixture.css'),
+		contents: Buffer.from('a { color: black }'),
 	}));
 
 	init.end();
-
 });
 
-
 it('should correctly generate relative source map', function (cb) {
-
 	const init = sourceMaps.init();
 	const css = postcss(
 		[ doubler, doubler ]
@@ -138,13 +127,12 @@ it('should correctly generate relative source map', function (cb) {
 	});
 
 	init.write(new gutil.File({
-		base: __dirname + '/src',
-		path: __dirname + '/src/fixture.css',
-		contents: new Buffer('a { color: black }'),
+		base: path.join(__dirname, 'src'),
+		path: path.join(__dirname, 'src/fixture.css'),
+		contents: Buffer.from('a { color: black }'),
 	}));
 
 	init.end();
-
 });
 
 describe('PostCSS Syntax Infer', function () {
@@ -158,7 +146,7 @@ describe('PostCSS Syntax Infer', function () {
 		];
 
 		stream.on('error', cb);
-		stream.on('data', function(file) {
+		stream.on('data', function (file) {
 			assert.equal(file.contents.toString(), [
 				less[0],
 				less[0],
@@ -171,9 +159,9 @@ describe('PostCSS Syntax Infer', function () {
 		});
 
 		stream.write(new gutil.File({
-			base: __dirname + '/src',
-			path: __dirname + '/src/fixture.less',
-			contents: new Buffer(less.join('\n')),
+			base: path.join(__dirname, 'src'),
+			path: path.join(__dirname, 'src/fixture.less'),
+			contents: Buffer.from(less.join('\n')),
 		}));
 
 		stream.end();
@@ -182,16 +170,16 @@ describe('PostCSS Syntax Infer', function () {
 	it('should show error for `MODULE_NOT_FOUND`', function (cb) {
 		const stream = postcss([doubler]);
 
-		stream.on('error', function(error) {
+		stream.on('error', function (error) {
 			assert.equal(error.code, 'MODULE_NOT_FOUND');
 			assert.equal(error.message, 'Cannot find module \'postcss-sass\'');
 			cb();
 		});
 
 		stream.write(new gutil.File({
-			base: __dirname + '/src',
-			path: __dirname + '/src/fixture.sass',
-			contents: new Buffer('a {'),
+			base: path.join(__dirname, 'src'),
+			path: path.join(__dirname, 'src/fixture.sass'),
+			contents: Buffer.from('a {'),
 		}));
 
 		stream.end();
@@ -199,7 +187,6 @@ describe('PostCSS Syntax Infer', function () {
 });
 
 describe('PostCSS Guidelines', function () {
-
 	const sandbox = sinon.sandbox.create();
 	const CssSyntaxError = function (message, source) {
 		this.name = 'CssSyntaxError';
@@ -208,9 +195,9 @@ describe('PostCSS Guidelines', function () {
 		this.showSourceCode = function () {
 			return this.source;
 		};
-		this.toString = function() {
+		this.toString = function () {
 			let code = this.showSourceCode();
-			if ( code ) {
+			if (code) {
 				code = '\n\n' + code + '\n';
 			}
 			return this.name + ': ' + this.message + code;
@@ -251,7 +238,6 @@ describe('PostCSS Guidelines', function () {
 	});
 
 	it('should set `from` and `to` processing options to `file.path`', function (cb) {
-
 		const rename = require('gulp-rename')({
 			extname: '.css',
 		});
@@ -274,16 +260,14 @@ describe('PostCSS Guidelines', function () {
 		});
 
 		rename.write(new gutil.File({
-			contents: new Buffer('a {}'),
+			contents: Buffer.from('a {}'),
 			path: mdPath,
 		}));
 
 		rename.end();
-
 	});
 
 	it('should allow override of `to` processing option', function (cb) {
-
 		const stream = postcss({
 			plugin: [ doubler ],
 			to: 'overriden',
@@ -301,18 +285,16 @@ describe('PostCSS Guidelines', function () {
 		});
 
 		stream.write(new gutil.File({
-			contents: new Buffer('a {}'),
+			contents: Buffer.from('a {}'),
 		}));
 
 		stream.end();
-
 	});
 
 	it('should take plugins and options from callback', function (cb) {
-
 		const cssPath = path.join(__dirname, 'fixture.css');
 		const file = new gutil.File({
-			contents: new Buffer('a {}'),
+			contents: Buffer.from('a {}'),
 			path: cssPath,
 		});
 		const plugins = [ doubler ];
@@ -348,14 +330,12 @@ describe('PostCSS Guidelines', function () {
 
 		stream.on('error', cb);
 		stream.end(file);
-
 	});
 
 	it('should take plugins and options from postcss-load-config', function (cb) {
-
 		const cssPath = path.join(__dirname, 'fixture.css');
 		const file = new gutil.File({
-			contents: new Buffer('a {}'),
+			contents: Buffer.from('a {}'),
 			path: cssPath,
 		});
 		const stream = postcss();
@@ -387,7 +367,6 @@ describe('PostCSS Guidelines', function () {
 		});
 
 		stream.end(file);
-
 	});
 
 	it('should point the config location to file directory', function (cb) {
@@ -405,7 +384,7 @@ describe('PostCSS Guidelines', function () {
 			cb();
 		});
 		stream.end(new gutil.File({
-			contents: new Buffer('a {}'),
+			contents: Buffer.from('a {}'),
 			path: cssPath,
 		}));
 	});
@@ -425,14 +404,14 @@ describe('PostCSS Guidelines', function () {
 			cb();
 		});
 		stream.end(new gutil.File({
-			contents: new Buffer('a {}'),
+			contents: Buffer.from('a {}'),
 			path: cssPath,
 		}));
 	});
 
 	it('should not override `from` and `map` if using gulp-sourcemaps', function (cb) {
 		const stream = postcss([ doubler ], { from: 'overriden', map: 'overriden' });
-		const cssPath = __dirname + '/fixture.css';
+		const cssPath = path.join(__dirname, 'fixture.css');
 		postcssStub.process.returns(Promise.resolve({
 			content: '',
 			warnings: function () {
@@ -457,7 +436,7 @@ describe('PostCSS Guidelines', function () {
 		});
 
 		const file = new gutil.File({
-			contents: new Buffer('a {}'),
+			contents: Buffer.from('a {}'),
 			path: cssPath,
 		});
 		file.sourceMap = {};
@@ -465,7 +444,6 @@ describe('PostCSS Guidelines', function () {
 	});
 
 	it('should not output js stack trace for `CssSyntaxError`', function (cb) {
-
 		const stream = postcss([ doubler ]);
 		const cssSyntaxError = new CssSyntaxError('messageText', 'sourceCode');
 		postcssStub.process.returns(Promise.reject(cssSyntaxError));
@@ -478,18 +456,15 @@ describe('PostCSS Guidelines', function () {
 		});
 
 		stream.write(new gutil.File({
-			contents: new Buffer('a {}'),
+			contents: Buffer.from('a {}'),
 		}));
 
 		stream.end();
-
 	});
 
-
 	it('should get `result.warnings()` content', function (cb) {
-
 		const stream = postcss([ doubler ]);
-		const cssPath = __dirname + '/src/fixture.css';
+		const cssPath = path.join(__dirname, 'src/fixture.css');
 		function Warning (msg) {
 			this.toString = function () {
 				return msg;
@@ -512,20 +487,17 @@ describe('PostCSS Guidelines', function () {
 		});
 
 		stream.write(new gutil.File({
-			contents: new Buffer('a {}'),
+			contents: Buffer.from('a {}'),
 			path: cssPath,
 		}));
 
 		stream.end();
-
 	});
-
 });
 
 describe('<style> tag', function () {
-
 	it('LESS in HTML', function (cb) {
-		function createHtml(css) {
+		function createHtml (css) {
 			return '<html><head><style type="text/less">' + css + '</style></head></html>';
 		}
 
@@ -536,19 +508,19 @@ describe('<style> tag', function () {
 		stream.on('data', function (file) {
 			const result = file.contents.toString('utf8');
 			const target = createHtml('a { color: black; color: black; color: black; color: black }');
-			assert.equal( result, target );
+			assert.equal(result, target);
 			cb();
 		});
 
 		stream.write(new gutil.File({
-			contents: new Buffer(createHtml('a { color: black }')),
+			contents: Buffer.from(createHtml('a { color: black }')),
 		}));
 
 		stream.on('error', cb);
 		stream.end();
 	});
 
-	it('HTML without <style> tag', function(cb) {
+	it('HTML without <style> tag', function (cb) {
 		const html = '<html><body></body></html>';
 
 		const stream = postcss(
@@ -558,7 +530,7 @@ describe('<style> tag', function () {
 		stream.on('data', function (file) {
 			const result = file.contents.toString('utf8');
 			try {
-				assert.equal( result, html );
+				assert.equal(result, html);
 				cb();
 			} catch (error) {
 				cb(error);
@@ -566,7 +538,7 @@ describe('<style> tag', function () {
 		});
 
 		stream.write(new gutil.File({
-			contents: new Buffer(html),
+			contents: Buffer.from(html),
 		}));
 
 		stream.on('error', cb);
@@ -574,7 +546,7 @@ describe('<style> tag', function () {
 	});
 
 	it('remove nodes from root', function (cb) {
-		function createHtml(css) {
+		function createHtml (css) {
 			return '<html><head><style>' + css + '</style></head></html>';
 		}
 
@@ -587,12 +559,12 @@ describe('<style> tag', function () {
 		stream.on('data', function (file) {
 			const result = file.contents.toString('utf8');
 			const target = createHtml('');
-			assert.equal( result, target );
+			assert.equal(result, target);
 			cb();
 		});
 
 		stream.write(new gutil.File({
-			contents: new Buffer(createHtml('a { color: black }')),
+			contents: Buffer.from(createHtml('a { color: black }')),
 		}));
 
 		stream.on('error', cb);
@@ -600,9 +572,8 @@ describe('<style> tag', function () {
 	});
 
 	it('vue component', function (cb) {
-		function createVue(css) {
+		function createVue (css) {
 			return '<style lang="less">' + css + '</style>';
-
 		}
 
 		const stream = postcss(
@@ -612,18 +583,17 @@ describe('<style> tag', function () {
 		stream.on('data', function (file) {
 			const result = file.contents.toString('utf8');
 			const target = createVue('a { color: black; color: black; color: black; color: black }');
-			assert.equal( result, target );
+			assert.equal(result, target);
 			cb();
 		});
 
 		stream.write(new gutil.File({
-			contents: new Buffer(createVue('a { color: black }')),
+			contents: Buffer.from(createVue('a { color: black }')),
 		}));
 
 		stream.on('error', cb);
 		stream.end();
 	});
-
 });
 
 function doubler (css) {
