@@ -8,8 +8,7 @@ node_js:
   - 4
 
 before_install:
-  - npm i check-node-version -g
-  - check-node-version --node '>= 9' || npm i npm@latest -g
+  - npm i npm@latest -g
 
 after_script:
   - npm run coveralls
