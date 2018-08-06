@@ -169,6 +169,9 @@ module.exports = function (ctx) {
 
 ## Changelog
 
+* 7.0.1
+  * Drop dependency on gulp-util
+
 * 7.0.0
   * Bump PostCSS to 6.0
   * Smaller module size
