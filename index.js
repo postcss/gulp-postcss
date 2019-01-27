@@ -49,6 +49,14 @@ module.exports = withConfigLoader(function (loadConfig) {
         }
         return postcss(config.plugins || [])
           .process(file.contents, options)
+          .then(function(result){
+            var options = config.pluginOptions || {}
+            if (options.handleResult) {
+              options.handleResult(result)
+            }
+
+            return result
+          })
       })
       .then(handleResult, handleError)
 
@@ -56,7 +64,7 @@ module.exports = withConfigLoader(function (loadConfig) {
       var map
       var warnings = result.warnings().join('\n')
 
-      file.contents = new Buffer(result.css)
+      file.contents = Buffer.from(result.css)
 
       // Apply source map to the chain
       if (file.sourceMap) {
@@ -101,12 +109,13 @@ module.exports = withConfigLoader(function (loadConfig) {
 
 
 function withConfigLoader(cb) {
-  return function (plugins, options) {
+  return function (plugins, postcssOptions, pluginOptions) {
     if (Array.isArray(plugins)) {
       return cb(function () {
         return Promise.resolve({
           plugins: plugins,
-          options: options
+          options: postcssOptions,
+          pluginOptions: pluginOptions
         })
       })
     } else if (typeof plugins === 'function') {
