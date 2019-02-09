@@ -41,7 +41,7 @@ it('should transform css with multiple processors', function (cb) {
   })
 
   stream.write(new Vinyl({
-    contents: new Buffer('a { color: black }')
+    contents: Buffer.from('a { color: black }')
   }))
 
   stream.end()
@@ -64,7 +64,7 @@ it('should not transform css with out any processor', function (cb) {
   })
 
   stream.write(new Vinyl({
-    contents: new Buffer(css)
+    contents: Buffer.from(css)
   }))
 
   stream.end()
@@ -89,7 +89,7 @@ it('should correctly wrap postcss errors', function (cb) {
   })
 
   stream.write(new Vinyl({
-    contents: new Buffer('a {'),
+    contents: Buffer.from('a {'),
     path: path.resolve('testpath')
   }))
 
@@ -143,7 +143,7 @@ it('should generate source maps', function (cb) {
   init.write(new Vinyl({
     base: __dirname,
     path: __dirname + '/fixture.css',
-    contents: new Buffer('a { color: black }')
+    contents: Buffer.from('a { color: black }')
   }))
 
   init.end()
@@ -169,7 +169,7 @@ it('should correctly generate relative source map', function (cb) {
   init.write(new Vinyl({
     base: __dirname + '/src',
     path: __dirname + '/src/fixture.css',
-    contents: new Buffer('a { color: black }')
+    contents: Buffer.from('a { color: black }')
   }))
 
   init.end()
@@ -179,7 +179,7 @@ it('should correctly generate relative source map', function (cb) {
 
 describe('PostCSS Guidelines', function () {
 
-  var sandbox = sinon.sandbox.create()
+  var sandbox = sinon.createSandbox()
   var CssSyntaxError = function (message, source) {
     this.name = 'CssSyntaxError'
     this.message = message
@@ -241,7 +241,7 @@ describe('PostCSS Guidelines', function () {
     })
 
     stream.write(new Vinyl({
-      contents: new Buffer('a {}'),
+      contents: Buffer.from('a {}'),
       path: cssPath
     }))
 
@@ -265,7 +265,7 @@ describe('PostCSS Guidelines', function () {
     })
 
     stream.write(new Vinyl({
-      contents: new Buffer('a {}')
+      contents: Buffer.from('a {}')
     }))
 
     stream.end()
@@ -276,7 +276,7 @@ describe('PostCSS Guidelines', function () {
 
     var cssPath = __dirname + '/fixture.css'
     var file = new Vinyl({
-      contents: new Buffer('a {}'),
+      contents: Buffer.from('a {}'),
       path: cssPath
     })
     var plugins = [ doubler ]
@@ -308,7 +308,7 @@ describe('PostCSS Guidelines', function () {
 
     var cssPath = __dirname + '/fixture.css'
     var file = new Vinyl({
-      contents: new Buffer('a {}'),
+      contents: Buffer.from('a {}'),
       path: cssPath
     })
     var stream = postcss({ to: 'initial' })
@@ -355,7 +355,7 @@ describe('PostCSS Guidelines', function () {
       cb()
     })
     stream.end(new Vinyl({
-      contents: new Buffer('a {}'),
+      contents: Buffer.from('a {}'),
       path: cssPath
     }))
   })
@@ -375,7 +375,7 @@ describe('PostCSS Guidelines', function () {
       cb()
     })
     stream.end(new Vinyl({
-      contents: new Buffer('a {}'),
+      contents: Buffer.from('a {}'),
       path: cssPath
     }))
   })
@@ -395,7 +395,7 @@ describe('PostCSS Guidelines', function () {
       cb()
     })
     stream.end(new Vinyl({
-      contents: new Buffer('a {}'),
+      contents: Buffer.from('a {}'),
       path: cssPath,
       base: __dirname
     }))
@@ -432,7 +432,7 @@ describe('PostCSS Guidelines', function () {
     })
 
     var file = new Vinyl({
-      contents: new Buffer('a {}'),
+      contents: Buffer.from('a {}'),
       path: cssPath
     })
     file.sourceMap = {}
@@ -453,7 +453,7 @@ describe('PostCSS Guidelines', function () {
     })
 
     stream.write(new Vinyl({
-      contents: new Buffer('a {}')
+      contents: Buffer.from('a {}')
     }))
 
     stream.end()
@@ -485,7 +485,7 @@ describe('PostCSS Guidelines', function () {
     })
 
     stream.write(new Vinyl({
-      contents: new Buffer('a {}'),
+      contents: Buffer.from('a {}'),
       path: cssPath
     }))
 
@@ -520,7 +520,7 @@ describe('PostCSS Guidelines', function () {
     })
 
     stream.write(new Vinyl({
-      contents: new Buffer('a {}'),
+      contents: Buffer.from('a {}'),
       path: cssPath
     }))
 

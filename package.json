@@ -16,6 +16,9 @@
   "version": "8.0.0",
   "description": "PostCSS gulp plugin",
   "main": "index.js",
+  "engines": {
+    "node": ">=6"
+  },
   "scripts": {
     "coveralls": "coveralls < coverage/lcov.info",
     "pretest": "eslint *.js",

@@ -56,7 +56,7 @@ module.exports = withConfigLoader(function (loadConfig) {
       var map
       var warnings = result.warnings().join('\n')
 
-      file.contents = new Buffer(result.css)
+      file.contents = Buffer.from(result.css)
 
       // Apply source map to the chain
       if (file.sourceMap) {
