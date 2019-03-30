@@ -1,7 +1,7 @@
 # gulp-postcss
 
-[![Build Status](https://img.shields.io/travis/postcss/gulp-postcss.png)](https://travis-ci.org/postcss/gulp-postcss)
-[![Coverage Status](https://img.shields.io/coveralls/postcss/gulp-postcss.png)](https://coveralls.io/r/postcss/gulp-postcss)
+[![Build Status](https://img.shields.io/travis/postcss/gulp-postcss.svg)](https://travis-ci.org/postcss/gulp-postcss)
+[![Coverage Status](https://img.shields.io/coveralls/postcss/gulp-postcss.svg)](https://coveralls.io/r/postcss/gulp-postcss)
 
 [PostCSS](https://github.com/postcss/postcss) gulp plugin to pipe CSS through
 several plugins, but parse CSS only once.
