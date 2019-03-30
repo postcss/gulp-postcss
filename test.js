@@ -135,7 +135,7 @@ it('should generate source maps', function (cb) {
     .pipe(write)
 
   write.on('data', function (file) {
-    assert.equal(file.sourceMap.mappings, 'AAAA,IAAI,aAAY,CAAZ,aAAY,CAAZ,aAAY,CAAZ,YAAY,EAAE')
+    assert.equal(file.sourceMap.mappings, 'AAAA,IAAI,YAAW,EAAX,YAAW,EAAX,YAAW,EAAX,aAAa')
     assert(/sourceMappingURL=data:application\/json;(?:charset=\w+;)?base64/.test(file.contents.toString()))
     cb()
   })
