@@ -74,7 +74,7 @@ gulp.task('default', function () {
 var postcss = require('gulp-postcss');
 var cssnext = require('postcss-cssnext');
 var opacity = function (css, opts) {
-    css.eachDecl(function(decl) {
+    css.walkDecls(function(decl) {
         if (decl.prop === 'opacity') {
             decl.parent.insertAfter(decl, {
                 prop: '-ms-filter',
