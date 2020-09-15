@@ -12,6 +12,12 @@ several plugins, but parse CSS only once.
 
 Install required [postcss plugins](https://www.npmjs.com/browse/keyword/postcss-plugin) separately. E.g. for autoprefixer, you need to install [autoprefixer](https://github.com/postcss/autoprefixer) package.
 
+### PostCSS
+
+Starting from `8.0.0`, `gulp-postcss` moved its `postcss` dependency under `peerDependencies`. Therefore you'll need to manually install it.
+
+    $ npm install --save-dev postcss
+
 ## Basic usage
 
 The configuration is loaded automatically from `postcss.config.js`
