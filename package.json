@@ -17,7 +17,7 @@
   "description": "PostCSS gulp plugin",
   "main": "index.js",
   "engines": {
-    "node": ">=6"
+    "node": "^10 || ^12 || >=14"
   },
   "scripts": {
     "coveralls": "coveralls < coverage/lcov.info",
