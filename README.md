@@ -48,6 +48,30 @@ gulp.task('css', function () {
 });
 ```
 
+## Using with .pcss extension
+
+For using gulp-postcss to have input files in .pcss format and get .css output need additional library like gulp-rename.
+
+```js
+var postcss = require('gulp-postcss');
+var gulp = require('gulp');
+const rename = require('gulp-rename');
+
+gulp.task('css', function () {
+    return gulp.src('./src/*.pcss')
+        .pipe(postcss())
+        .pipe(rename({
+          extname: '.css'
+        }))
+        .pipe(gulp.dest('./dest'));
+});
+```
+
+This is done for more explicit transformation. According to [gulp plugin guidelines](https://github.com/gulpjs/gulp/blob/master/docs/writing-a-plugin/guidelines.md#guidelines)
+
+> Your plugin should only do one thing, and do it well.
+
+
 ## Passing additional options to PostCSS
 
 The second optional argument to gulp-postcss is passed to PostCSS.
