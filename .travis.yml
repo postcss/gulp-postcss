@@ -1,7 +1,8 @@
 sudo: false
 language: node_js
 node_js:
-  - stable
-  - 6
+  - node
+  - "12"
+  - "10"
 after_success:
   - "npm run coveralls"
