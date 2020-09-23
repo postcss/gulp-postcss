@@ -193,6 +193,11 @@ module.exports = function (ctx) {
 
 ## Changelog
 
+* 9.0.0
+  * Bump PostCSS to 8.0
+  * Drop Node 6 support
+  * PostCSS is now a peer dependency
+
 * 8.0.0
   * Bump PostCSS to 7.0
   * Drop Node 4 support
