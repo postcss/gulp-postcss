@@ -8,7 +8,7 @@ several plugins, but parse CSS only once.
 
 ## Install
 
-    $ npm install --save-dev gulp-postcss
+    $ npm install --save-dev postcss gulp-postcss
 
 Install required [postcss plugins](https://www.npmjs.com/browse/keyword/postcss-plugin) separately. E.g. for autoprefixer, you need to install [autoprefixer](https://github.com/postcss/autoprefixer) package.
 
@@ -47,6 +47,30 @@ gulp.task('css', function () {
         .pipe(gulp.dest('./dest'));
 });
 ```
+
+## Using with .pcss extension
+
+For using gulp-postcss to have input files in .pcss format and get .css output need additional library like gulp-rename.
+
+```js
+var postcss = require('gulp-postcss');
+var gulp = require('gulp');
+const rename = require('gulp-rename');
+
+gulp.task('css', function () {
+    return gulp.src('./src/*.pcss')
+        .pipe(postcss())
+        .pipe(rename({
+          extname: '.css'
+        }))
+        .pipe(gulp.dest('./dest'));
+});
+```
+
+This is done for more explicit transformation. According to [gulp plugin guidelines](https://github.com/gulpjs/gulp/blob/master/docs/writing-a-plugin/guidelines.md#guidelines)
+
+> Your plugin should only do one thing, and do it well.
+
 
 ## Passing additional options to PostCSS
 
@@ -168,6 +192,11 @@ module.exports = function (ctx) {
 ```
 
 ## Changelog
+
+* 9.0.0
+  * Bump PostCSS to 8.0
+  * Drop Node 6 support
+  * PostCSS is now a peer dependency
 
 * 8.0.0
   * Bump PostCSS to 7.0
