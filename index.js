@@ -127,6 +127,8 @@ function withConfigLoader(cb) {
         } else {
           configPath = file.dirname
         }
+        // @TODO: The options property is deprecated and should be removed in 10.0.0.
+        contextOptions.options = Object.assign({}, contextOptions)
         contextOptions.file = file
         return postcssLoadConfig(
           contextOptions,
