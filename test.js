@@ -329,7 +329,7 @@ describe('PostCSS Guidelines', function () {
     stream.on('data', function () {
       assert.deepEqual(postcssLoadConfigStub.getCall(0).args[0], {
         file: file,
-        options: { to: 'initial' }
+        to: 'initial'
       })
       assert.equal(postcssStub.use.getCall(0).args[0], plugins)
       assert.equal(postcssStub.process.getCall(0).args[1].to, 'overriden')

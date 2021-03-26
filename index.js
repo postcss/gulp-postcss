@@ -127,11 +127,9 @@ function withConfigLoader(cb) {
         } else {
           configPath = file.dirname
         }
+        contextOptions.file = file
         return postcssLoadConfig(
-          {
-            file: file,
-            options: contextOptions
-          },
+          contextOptions,
           configPath
         )
       })
