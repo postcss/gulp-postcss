@@ -92,6 +92,21 @@ gulp.task('default', function () {
 });
 ```
 
+If you are using a `postcss.config.js` file, you can pass PostCSS options as the first argument to gulp-postcss.
+
+This, for instance, will let PostCSS know what the final file destination path is, since it will be unaware of the path given to `gulp.dest()`:
+
+```js
+var gulp = require('gulp');
+var postcss = require('gulp-postcss');
+
+gulp.task('default', function () {
+    return gulp.src('in.scss')
+        .pipe(postcss({ to: 'out/in.css' }))
+        .pipe(gulp.dest('out'));
+});
+```
+
 ## Using a custom processor
 
 ```js
