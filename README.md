@@ -193,9 +193,10 @@ gulp.task('css', function () {
 ```
 
 ```js
+// postcss.config.js or .postcssrc.js
 module.exports = function (ctx) {
     var file = ctx.file;
-    var options = ctx.options;
+    var options = ctx;
     return {
         parser: file.extname === '.sss' ? : 'sugarss' : false,
         plugins: {
