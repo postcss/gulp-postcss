@@ -251,7 +251,7 @@ describe('PostCSS Guidelines', function () {
 
   it('should allow override of `to` processing option', function (cb) {
 
-    var stream = postcss([ doubler ], {to: 'overriden'})
+    var stream = postcss([ doubler ], {to: 'overridden'})
     postcssStub.process.returns(Promise.resolve({
       css: '',
       warnings: function () {
@@ -260,7 +260,7 @@ describe('PostCSS Guidelines', function () {
     }))
 
     stream.on('data', function () {
-      assert.equal(postcssStub.process.getCall(0).args[1].to, 'overriden')
+      assert.equal(postcssStub.process.getCall(0).args[1].to, 'overridden')
       cb()
     })
 
@@ -282,7 +282,7 @@ describe('PostCSS Guidelines', function () {
     var plugins = [ doubler ]
     var callback = sandbox.stub().returns({
       plugins: plugins,
-      options: { to: 'overriden' }
+      options: { to: 'overridden' }
     })
     var stream = postcss(callback)
 
@@ -296,7 +296,7 @@ describe('PostCSS Guidelines', function () {
     stream.on('data', function () {
       assert.equal(callback.getCall(0).args[0], file)
       assert.equal(postcssStub.use.getCall(0).args[0], plugins)
-      assert.equal(postcssStub.process.getCall(0).args[1].to, 'overriden')
+      assert.equal(postcssStub.process.getCall(0).args[1].to, 'overridden')
       cb()
     })
 
@@ -316,7 +316,7 @@ describe('PostCSS Guidelines', function () {
 
     postcssLoadConfigStub.returns(Promise.resolve({
       plugins: plugins,
-      options: { to: 'overriden' }
+      options: { to: 'overridden' }
     }))
 
     postcssStub.process.returns(Promise.resolve({
@@ -329,10 +329,11 @@ describe('PostCSS Guidelines', function () {
     stream.on('data', function () {
       assert.deepEqual(postcssLoadConfigStub.getCall(0).args[0], {
         file: file,
+        to: 'initial',
         options: { to: 'initial' }
       })
       assert.equal(postcssStub.use.getCall(0).args[0], plugins)
-      assert.equal(postcssStub.process.getCall(0).args[1].to, 'overriden')
+      assert.equal(postcssStub.process.getCall(0).args[1].to, 'overridden')
       cb()
     })
 
@@ -402,7 +403,7 @@ describe('PostCSS Guidelines', function () {
   })
 
   it('should not override `from` and `map` if using gulp-sourcemaps', function (cb) {
-    var stream = postcss([ doubler ], { from: 'overriden', map: 'overriden' })
+    var stream = postcss([ doubler ], { from: 'overridden', map: 'overridden' })
     var cssPath = __dirname + '/fixture.css'
     postcssStub.process.returns(Promise.resolve({
       css: '',
