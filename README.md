@@ -193,6 +193,9 @@ module.exports = function (ctx) {
 
 ## Changelog
 
+* 9.0.1
+  * Bump postcss-load-config to ^3.0.0
+
 * 9.0.0
   * Bump PostCSS to 8.0
   * Drop Node 6 support
