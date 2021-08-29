@@ -20,7 +20,6 @@
     "node": "^10 || ^12 || >=14"
   },
   "scripts": {
-    "coveralls": "coveralls < coverage/lcov.info",
     "pretest": "eslint *.js",
     "test": "nyc mocha test.js"
   },
@@ -47,7 +46,6 @@
     "vinyl-sourcemaps-apply": "^0.2.1"
   },
   "devDependencies": {
-    "coveralls": "^3.0.3",
     "eslint": "^5.16.0",
     "gulp-sourcemaps": "^2.6.5",
     "mocha": "^5.2.0",
