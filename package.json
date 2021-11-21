@@ -13,14 +13,13 @@
     "all": true,
     "check-coverage": true
   },
-  "version": "9.0.0",
+  "version": "9.0.1",
   "description": "PostCSS gulp plugin",
   "main": "index.js",
   "engines": {
     "node": "^10 || ^12 || >=14"
   },
   "scripts": {
-    "coveralls": "coveralls < coverage/lcov.info",
     "pretest": "eslint *.js",
     "test": "nyc mocha test.js"
   },
@@ -47,7 +46,6 @@
     "vinyl-sourcemaps-apply": "^0.2.1"
   },
   "devDependencies": {
-    "coveralls": "^3.0.3",
     "eslint": "^5.16.0",
     "gulp-sourcemaps": "^2.6.5",
     "mocha": "^5.2.0",
