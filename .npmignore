@@ -23,3 +23,5 @@ pids
 test
 test.js
 yarn.lock
+flake.lock
+flake.nix
