@@ -204,10 +204,17 @@ module.exports = function (ctx) {
            'postcss-modules': options.modules ? {} : false
         }
     }
-})
+};
 ```
 
 ## Changelog
+
+* 9.1.0
+  * Bump postcss-load-config to ^5.0.0
+  * Ensure options are passed to plugins when using postcss.config.js #170
+  * Update deps
+  * Drop support for node <18
+  * Add flake.nix for local dev with `nix develop`
 
 * 9.0.1
   * Bump postcss-load-config to ^3.0.0
