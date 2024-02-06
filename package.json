@@ -13,7 +13,7 @@
     "all": true,
     "check-coverage": true
   },
-  "version": "9.1.0",
+  "version": "10.0.0",
   "description": "PostCSS gulp plugin",
   "main": "index.js",
   "engines": {

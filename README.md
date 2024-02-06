@@ -209,7 +209,10 @@ module.exports = function (ctx) {
 
 ## Changelog
 
-* 9.1.0
+* 10.0.0
+  * Released with the same changes as 9.1.0
+
+* 9.1.0 **deprecated, because it breaks semver by dropping support for node <18**
   * Bump postcss-load-config to ^5.0.0
   * Ensure options are passed to plugins when using postcss.config.js #170
   * Update deps
